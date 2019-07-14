@@ -1,25 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { IpcRenderer, IpcMessageEvent} from 'electron' ; 
+import {Input, Button} from 'semantic-ui-react' ; 
+import ConfigPathModal from './components/configPathModal';
+import MainPage from './components/MainPage';
+import { registerListeners } from './Listeners/registerListeners';
 
 declare global {
   interface Window {
     require: any;
   }
 }
+
 const electron  = window.require('electron') ; 
 let ipcRenderer : IpcRenderer  = electron.ipcRenderer ; 
 
-ipcRenderer.on('response' , (event:IpcMessageEvent , args:any)=>{
-  console.log(args);
-})
-
 const App: React.FC = () => {
+  useEffect(() => {
+    registerListeners() ; 
+  },[])
   return (
     <div className="App">
-      <button onClick={e=>ipcRenderer.send('channel' , {title : 'hi' , content : 'hello this is my message'})} >
-        Click Him
-      </button>
-    </div>
+      <MainPage/>
+   </div>
   );
 }
 
