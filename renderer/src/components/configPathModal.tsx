@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { Modal, Input, Button } from 'semantic-ui-react';
 import { IpcRenderer } from 'electron';
 import { useStoreState, useStoreActions } from '../store/store';
+import { Channels } from '../types/types';
 const electron  = window.require('electron') ; 
 const fs = window.require('fs') ; 
 let ipcRenderer : IpcRenderer  = electron.ipcRenderer ;
 
 
 const ConfigPathModal = () => {
-    const [errorflag , seterrorflag] = useState(false) ; 
+    const [errorflag , seterrorflag] = useState(true) ; 
     const [loadSuccess,configpath] = useStoreState(state=>[state.terminalConfig.loadSuccess,state.terminalConfig.configFilePath]) ; 
     const setConfigFilePath = useStoreActions(actions=>actions.setConfigFilePath)
     
@@ -27,7 +28,7 @@ const ConfigPathModal = () => {
                 onClick={e => { 
                         let newerrorflag = false ; 
                         if(configpath.length==0) newerrorflag = true ; 
-                        if(!newerrorflag) ipcRenderer.send('terminal-config-path', configpath)
+                        if(!newerrorflag) ipcRenderer.send(Channels.terminalConfigPath, configpath)
                         seterrorflag(newerrorflag) ; 
                     }
                 }

@@ -6,22 +6,51 @@ export interface StoreType {
         loadFail : boolean , 
         configFilePath : string , 
     }
-    
+    globals : TerminalGlobals ,
+    profiles : TerminalProfile[] ,
+    schemes : TerminalColorScheme[]
+
     setLoadFail : Action<StoreType,boolean> , 
     setLoadSuccess : Action<StoreType,boolean> ,
-    setConfigFilePath : Action<StoreType,string> ,
+    setConfigFilePath : Action<StoreType,string> , 
+    setGlobals: Action<StoreType,TerminalGlobals> , 
+    setProfiles: Action<StoreType,TerminalProfile[]> , 
+    setSchemes: Action<StoreType,TerminalColorScheme[]> , 
+}
+export interface WindowsTerminalConfigType{
+    globals : TerminalGlobals ,
+    profiles : TerminalProfile[] ,
+    schemes : TerminalColorScheme[]
 }
 
+export enum ImageStretchMode{
+    Fill = 'Fill' ,
+    Fit ='Fit' , 
+    Stretch = 'Stretch' , 
+    Tile = 'Tile' , 
+    Center = 'Center' , 
+    Span = 'Span'
+}
 
+export enum CursorShape{
+    bar ='bar' , 
+    emptyBox = 'emptyBox' , 
+    filledBox = 'filledBox' , 
+    underScore = 'underScore' , 
+    vintage = 'vintage'
+}
 
 export interface TerminalProfile{
     acrylicOpacity? : number ,
     background? : string,
+    backgroundImage? : string,
+    backgroundImageOpacity ? : number,
+    backgroundImageStretchMode? : ImageStretchMode
     closeOnExit? : boolean,
     colorScheme? : string,
     commandline? : string ,
     cursorColor? : string,
-    cursorShape? : 'bar' | 'emptyBox' | 'filledBox' | 'underScore' | 'vintage' ,
+    cursorShape? : CursorShape , 
     fontFace? : string ,
     fontSize? : number ,
     guid? : string , 
@@ -63,7 +92,7 @@ export interface TerminalKeyBinding {
 }
 
 export interface TerminalGlobals {
-        alwaysShowTabs : true,
+        alwaysShowTabs : boolean,
         defaultProfile : string , 
         initialCols : number,
         initialRows : number ,
@@ -82,4 +111,6 @@ export interface TerminalConfig{
 export enum Channels{
     configLoadSuccess = 'config-load-success' ,
     configLoadFail = 'config-load-fail' ,
+    terminalConfigChange = 'terminal-config-change' ,
+    terminalConfigPath = 'terminal-config-path' ,
 }

@@ -1,11 +1,13 @@
 import { BrowserWindow , app , ipcMain, IpcMessageEvent } from 'electron' ; 
 import * as isDev from "electron-is-dev" ; 
 import * as path from 'path'
-import { readFile } from 'fs';
+import { readFile, writeFile } from 'fs';
 import { sendConfigLoadFailure, sendConfigLoadSuccess } from './messenger';
+import { Channels } from './types';
 
 let mainWindow : BrowserWindow ;
-
+let terminalConfigFilePath : string|undefined = undefined; 
+terminalConfigFilePath = 'C:\\Users\\Natesh\\AppData\\Local\\Packages\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\RoamingState\\profiles.json'
 
 function createWindow() {
 
@@ -27,7 +29,7 @@ function createWindow() {
 
     mainWindow.on("closed", () => (mainWindow.destroy()));
 
-    ipcMain.on('terminal-config-path' , (event : IpcMessageEvent , msg: any)=>{
+    ipcMain.on(Channels.terminalConfigPath , (event : IpcMessageEvent , msg: any)=>{
         console.log(msg) ; 
         readFile(msg,(err , data)=>{
             if(err){
@@ -35,10 +37,22 @@ function createWindow() {
                 sendConfigLoadFailure(mainWindow , err.message);
             }
             else{
+                terminalConfigFilePath = msg ; 
                 const jsondata = JSON.parse(data.toString()) ;
                 sendConfigLoadSuccess(mainWindow , jsondata ) ;
             }
         })
+    })
+
+    ipcMain.on(Channels.terminalConfigChange , (event:IpcMessageEvent , config : string )=>{
+        if(terminalConfigFilePath==undefined){
+            console.log("Error ! Terminal config path undefined ! ") ; 
+            return ; 
+        }
+        writeFile(terminalConfigFilePath , config , null , (err)=>{
+            if(err)
+                console.log("Error writing to File : " , err) ; 
+        }) ; 
     })
 }
 

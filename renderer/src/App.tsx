@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { IpcRenderer, IpcMessageEvent} from 'electron' ; 
 import {Input, Button} from 'semantic-ui-react' ; 
-import ConfigPathModal from './components/configPathModal';
+import ConfigPathModal from './components/ConfigPathModal';
 import MainPage from './components/MainPage';
-import { registerListeners } from './Listeners/registerListeners';
+import { registerListeners } from './ListenersAndComms/registerListeners';
 
 declare global {
   interface Window {
