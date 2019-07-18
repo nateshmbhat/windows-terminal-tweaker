@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Container, Button, Grid, Segment, Divider, Input, Dropdown } from 'semantic-ui-react';
 import { useStoreState, useStoreActions } from '../store/store';
+import { RequestedThemeOptions } from '../types/types';
 
 const ConfigGlobalsPage = () => {
     const [globals ,profiles ]= useStoreState((state) => [state.globals,state.profiles])
@@ -78,15 +79,15 @@ const ConfigGlobalsPage = () => {
                     <Dropdown text="Requested Theme" defaultSelectedLabel={globals.requestedTheme} className='icon' icon='theme' floating labeled button >
                         <Dropdown.Menu >
                             <Dropdown.Item onClick={() => {
-                                setGlobals({ ...globals, requestedTheme: 'system' })
+                                setGlobals({ ...globals, requestedTheme: RequestedThemeOptions.system })
                             }} label={{ color: 'blue', empty: true, circular: true }} text='System' />
 
                             <Dropdown.Item onClick={() => {
-                                setGlobals({ ...globals, requestedTheme: 'light' })
+                                setGlobals({ ...globals, requestedTheme: RequestedThemeOptions.light })
                             }} label={{ color: 'grey', empty: true, circular: true }} text='Light' />
 
                             <Dropdown.Item onClick={() => {
-                                setGlobals({ ...globals, requestedTheme: 'dark' })
+                                setGlobals({ ...globals, requestedTheme: RequestedThemeOptions.dark })
                             }} label={{ color: 'black', empty: true, circular: true }} text='Dark' />
 
                         </Dropdown.Menu>

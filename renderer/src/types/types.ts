@@ -1,4 +1,5 @@
 import { Action } from "easy-peasy";
+import { RegexLiteral } from "@babel/types";
 
 export interface StoreType {
     terminalConfig : {
@@ -15,6 +16,7 @@ export interface StoreType {
     setConfigFilePath : Action<StoreType,string> , 
     setGlobals: Action<StoreType,TerminalGlobals> , 
     setProfiles: Action<StoreType,TerminalProfile[]> , 
+    setSpecificProfile : Action<StoreType,{profile : TerminalProfile , id : string } > , 
     setSchemes: Action<StoreType,TerminalColorScheme[]> , 
 }
 export interface WindowsTerminalConfigType{
@@ -32,63 +34,83 @@ export enum ImageStretchMode{
     Span = 'Span'
 }
 
+export enum CursorShapeToIcon {
+    bar ='┃' , 
+    emptyBox = '▯' , 
+    filledBox = '█' , 
+    underscore = '▁' , 
+    vintage = '▃'
+}
+
 export enum CursorShape{
     bar ='bar' , 
     emptyBox = 'emptyBox' , 
     filledBox = 'filledBox' , 
-    underScore = 'underScore' , 
+    underscore = 'underscore' , 
     vintage = 'vintage'
 }
+export enum ScrollBarState{
+    visible = 'visible' ,
+    hidden ='hidden'
+}
+
+const WindowsFilePathRegex : RegExp = /(^([a-z]|[A-Z]):(?=\\(?![\0-\37<>:"/\\|?*])|\/(?![\0-\37<>:"/\\|?*])|$)|^\\(?=[\\\/][^\0-\37<>:"/\\|?*]+)|^(?=(\\|\/)$)|^\.(?=(\\|\/)$)|^\.\.(?=(\\|\/)$)|^(?=(\\|\/)[^\0-\37<>:"/\\|?*]+)|^\.(?=(\\|\/)[^\0-\37<>:"/\\|?*]+)|^\.\.(?=(\\|\/)[^\0-\37<>:"/\\|?*]+))((\\|\/)[^\0-\37<>:"/\\|?*]+|(\\|\/)$)*()$/ ; 
 
 export interface TerminalProfile{
-    acrylicOpacity? : number ,
+    guid : string , 
+    name  : string ,
+    acrylicOpacity : number ,
+    useAcrylic  : boolean  , 
+    closeOnExit : boolean,
+    colorScheme : string,
+    commandline : string ,
+    cursorColor : string,
+    cursorShape : CursorShape , 
+    fontFace : string ,
+    fontSize : number ,
+    historySize : number ,
+    padding : string  , 
+    snapOnInput : boolean,
+    icon? : string , 
+    startingDirectory ? : string ,
     background? : string,
+    colorTable? : string[],
+    cursorHeight ? : number , 
+    foreground ? : string ,
+    scrollbarState ? : ScrollBarState , 
+    tabTitle ?: string , 
     backgroundImage? : string,
     backgroundImageOpacity ? : number,
     backgroundImageStretchMode? : ImageStretchMode
-    closeOnExit? : boolean,
-    colorScheme? : string,
-    commandline? : string ,
-    cursorColor? : string,
-    cursorShape? : CursorShape , 
-    fontFace? : string ,
-    fontSize? : number ,
-    guid? : string , 
-    historySize? : number ,
-    icon? : string , 
-    name ? : string ,
-    padding? : string  , 
-    snapOnInput? : boolean,
-    startingDirectory ? : string ,
-    useAcrylic ? : boolean  , 
-    [key :string] : any
 }; 
 
 export interface  TerminalColorScheme {
-    background ? : string,
-    black ? : string,
-    blue ? : string,
-    brightBlack ? : string,
-    brightBlue ? : string,
-    brightCyan ? : string,
-    brightGreen ? : string,
-    brightPurple ? : string,
-    brightRed ? : string,
-    brightWhite ? : string,
-    brightYellow ? : string,
-    cyan ? : string,
-    foreground ? : string,
-    green ? : string,
-    name ? : string,
-    purple ? : string,
-    red ? : string,
-    white ? : string,
-    yellow ? : string ,
-    [key :string] : any
+    name  : string,
+    foreground  : string,
+    background  : string,
+    black  : string,
+    blue  : string,
+    brightBlack  : string,
+    brightBlue  : string,
+    brightCyan  : string,
+    brightGreen  : string,
+    brightPurple  : string,
+    brightRed  : string,
+    brightWhite  : string,
+    brightYellow  : string,
+    cyan  : string,
+    green  : string,
+    purple  : string,
+    red  : string,
+    white  : string,
+    yellow  : string ,
 }
 export interface TerminalKeyBinding {
     command : string , 
     keys : string[] 
+}
+export enum RequestedThemeOptions{
+    system = 'system' , dark = 'dark' , light = 'light'
 }
 
 export interface TerminalGlobals {
@@ -97,9 +119,10 @@ export interface TerminalGlobals {
         initialCols : number,
         initialRows : number ,
         keybindings : TerminalKeyBinding[] , 
-        requestedTheme : string, // 'system'|'dark'|'light'  . string is @FutureCompatile
-        showTabsInTitlebar : boolean ,
+        requestedTheme : RequestedThemeOptions ,  
         showTerminalTitleInTitlebar :boolean 
+        showTabsInTitlebar : boolean | undefined ,
+        wordDelimiters : string  | undefined
 }
 
 export interface TerminalConfig{
@@ -114,3 +137,5 @@ export enum Channels{
     terminalConfigChange = 'terminal-config-change' ,
     terminalConfigPath = 'terminal-config-path' ,
 }
+
+export {WindowsFilePathRegex} ;
