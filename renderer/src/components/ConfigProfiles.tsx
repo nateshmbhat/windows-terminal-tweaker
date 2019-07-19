@@ -1,20 +1,27 @@
 import * as React from 'react';
 import { useStoreActions, useStoreState } from '../store/store';
-import { Container, Grid, Button, Divider, Dropdown, Segment, SegmentGroup, Input, Icon, Label, Popup } from 'semantic-ui-react';
+import { Container, Grid, Button, Divider, Dropdown, Segment, SegmentGroup, Input, Icon, Label, Popup, DropdownMenu, DropdownItem, DropdownDivider } from 'semantic-ui-react';
 import { TerminalProfile, CursorShape, CursorShapeToIcon, WindowsFilePathRegex, ScrollBarState, ImageStretchMode } from '../types/types';
 import { ColorPickerPopup } from './ColorChangePickerPopUp';
+import { v4 as uuid4 } from 'uuid';
 
 
 const ConfigProfilesPage = () => {
     const [profiles, schemes] = useStoreState((state) => [state.profiles, state.schemes])
-    const setProfile = useStoreActions((actions) => actions.setSpecificProfile);
+    const [setStoreProfile, setStoreProfiles] = useStoreActions((actions) => [actions.setSpecificProfile, actions.setProfiles]);
     const [curProfile, setCurrentProfile] = React.useState(profiles[0]);
 
     const profileIconError: boolean = typeof curProfile.icon === 'string' && (!!curProfile.icon.match(WindowsFilePathRegex) || curProfile.icon.indexOf('ms-appx') < 0)
 
     const setSpecificProfile = (obj: any) => {
-        setProfile({ profile: { ...curProfile, ...obj }, id: curProfile.guid });
+        setStoreProfile({ profile: { ...curProfile, ...obj }, id: curProfile.guid });
         setCurrentProfile({ ...curProfile, ...obj });
+    }
+    const addNewProfile = () => {
+        let newprofile: TerminalProfile = { ...profiles[0] }; //deepcopy first profile
+        newprofile.name = 'New Profile';
+        newprofile.guid = `{${uuid4()}}`;
+        setStoreProfiles([...profiles, newprofile]);
     }
 
     return (
@@ -28,19 +35,22 @@ const ConfigProfilesPage = () => {
             <Divider />
 
             <Segment raised size='large' attached color='violet'>
-                <Dropdown text={'Profile : ' + curProfile.name} fluid selection options={profiles.map(p => ({
-                    text: p.name,
-                    value: p.guid,
-                    description: p.guid
-                }))}
-                    onChange={(e, data) => {
-                        if (typeof data.value === 'string') {
-                            setCurrentProfile(
-                                profiles.filter(p => p.guid === data.value)[0]
-                            );
+                <Dropdown text={'Profile : ' + curProfile.name} fluid >
+                    <DropdownMenu>
+                        {
+                            profiles.map(p => {
+                                return <DropdownItem key={p.guid} text={p.name} value={p.guid} description={p.guid} selected={p.guid === curProfile.guid} active={p.guid === curProfile.guid} onClick={e => setCurrentProfile(p)}
+                                    icon={<Icon name='circle outline' />}
+                                />
+                            })
                         }
-                    }}
-                />
+                        <DropdownDivider />
+
+                        <DropdownItem>
+                            <Button content='Add New Profile' fluid onClick={e => addNewProfile()} />
+                        </DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
             </Segment>
 
             <SegmentGroup>
@@ -107,29 +117,35 @@ const ConfigProfilesPage = () => {
 
 
                 <Segment>
-                    <Input fluid label='Background' placeholder={'#012456'} value={curProfile.background}/>
+                    <Input fluid label='Background' placeholder={'#012456'} value={curProfile.background} />
 
-                    <ColorPickerPopup value={curProfile.background} onChange={e=>setSpecificProfile({background:e.hex})} >
+                    <ColorPickerPopup value={curProfile.background} onChange={e => setSpecificProfile({ background: e.hex })} >
                         <div style={{ height: '100px', width: '100%', backgroundColor: curProfile.background }}></div>
                     </ColorPickerPopup>
                 </Segment>
 
                 <Segment>
-                    <Input icon='image outline' fluid label='Background Image Path'  value={curProfile.backgroundImage} onChange={e => setSpecificProfile({ backgroundImage: e.target.value })}
-                    />
+                    <Popup mouseEnterDelay={300}
+                    trigger={
+                        <Input icon='image outline' fluid label='Background Image Path' value={curProfile.backgroundImage} onChange={e => setSpecificProfile({ backgroundImage: e.target.value })}/>
+                    } 
+                    >
+                        Works with 'UseAcrylic' Off
+                    </Popup>
                 </Segment>
+
 
                 <Segment>
                     <Input fluid label='Background Image Opacity' type='number' value={curProfile.backgroundImageOpacity} onChange={e => setSpecificProfile({ backgroundImageOpacity: Number.parseFloat(e.target.value) })}
-                    
-                    error={ curProfile.backgroundImageOpacity!=undefined && (curProfile.backgroundImageOpacity<0 || curProfile.backgroundImageOpacity>1)} 
+
+                        error={curProfile.backgroundImageOpacity != undefined && (curProfile.backgroundImageOpacity < 0 || curProfile.backgroundImageOpacity > 1)}
                     />
                 </Segment>
 
                 <Segment>
                     <Label content='Background Image Stretch Mode' pointing='right' icon='image' size='large' />
                     <Dropdown button inline text={curProfile.backgroundImageStretchMode}
-                        options={Object.entries(ImageStretchMode).map(mode => ({ text: mode[0], value: mode[1]}))}
+                        options={Object.entries(ImageStretchMode).map(mode => ({ text: mode[0], value: mode[1] }))}
                         onChange={(e, data) => {
                             if (typeof data.value === 'string') {
                                 setSpecificProfile({ backgroundImageStretchMode: data.value })
@@ -179,19 +195,21 @@ const ConfigProfilesPage = () => {
                     <Input fluid label='Tab Title' value={curProfile.tabTitle} onChange={e => setSpecificProfile({ tabTitle: e.target.value })} />
                 </Segment>
 
-                {/* <Segment>
-                    <Input fluid label='Cursor Height' type='number' value={curProfile.cursorHeight} onChange={e => setSpecificProfile({ cursorHeight: Number.parseFloat(e.target.value)})} />
-                </Segment>
- */}
                 <Segment>
-                    <Input fluid label='Foreground' value={curProfile.foreground}/>
+                    <Popup
+                        mouseEnterDelay={500}
+                        trigger={
+                            <Input fluid label='Cursor Height' type='number' error={curProfile.cursorHeight != undefined && (curProfile.cursorHeight < 25 || curProfile.cursorHeight > 100)} value={curProfile.cursorHeight} onChange={e => e.target.value && setSpecificProfile({ cursorHeight: Number.parseInt(e.target.value) })} />
+                        }>
+                        Sets the percentage height of the cursor starting from the bottom. Only works when cursorShape is set to "vintage". Accepts values from 25-100.                    </Popup>
+                </Segment>
 
-                    <ColorPickerPopup value={curProfile.foreground} onChange={e=>setSpecificProfile({foreground:e.hex})} >
+                <Segment>
+                    <Input fluid label='Foreground' value={curProfile.foreground} />
+                    <ColorPickerPopup value={curProfile.foreground} onChange={e => setSpecificProfile({ foreground: e.hex })} >
                         <div style={{ height: '100px', width: '100%', backgroundColor: curProfile.foreground }}></div>
                     </ColorPickerPopup>
                 </Segment>
-
-
 
             </SegmentGroup>
 

@@ -8,7 +8,7 @@ export const ColorPickerPopup = (props : { children : React.PropsWithChildren<Re
     onChange? : ColorChangeHandler
 }) => {
     return (
-        <Popup header='Pick Color' openOnTriggerMouseEnter trigger={props.children} closeOnDocumentClick closeOnTriggerMouseLeave={false} closeOnPortalMouseLeave  >
+        <Popup mouseEnterDelay={300} mouseLeaveDelay={500}  position='top center' trigger={props.children} closeOnDocumentClick closeOnPortalMouseLeave  >
             <ChromePicker color={props.value} onChange={props.onChange} />
         </Popup>);
 }

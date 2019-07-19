@@ -15,7 +15,8 @@
     "react-scripts": "3.0.1",
     "semantic-ui-react": "^0.87.2",
     "typescript": "3.5.2",
-    "use-react-router": "^1.0.7"
+    "use-react-router": "^1.0.7",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "react-start": "react-scripts start",
@@ -51,6 +52,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-router-dom": "^4.3.4",
     "@types/semantic-ui": "^2.2.7",
+    "@types/uuid": "^3.4.5",
     "concurrently": "^4.1.1",
     "cross-env": "^5.2.0",
     "electron-builder": "^20.44.4",
