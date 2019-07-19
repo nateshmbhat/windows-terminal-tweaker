@@ -1,5 +1,5 @@
 import { createStore, action, State, Action } from 'easy-peasy'
-import { StoreType, CursorShape, RequestedThemeOptions } from '../types/types';
+import { StoreType, CursorShape, RequestedThemeOptions, ImageStretchMode } from '../types/types';
 import { sendTerminalConfigChange } from '../ListenersAndComms/messageSender';
 
 const initialState: StoreType = {
@@ -212,6 +212,7 @@ const initialState: StoreType = {
 
     profiles: [
         {
+            backgroundImageStretchMode : ImageStretchMode.Fill   ,
             "acrylicOpacity": 0.5,
             "background": "#012456",
             "closeOnExit": true,

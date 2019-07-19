@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { useStoreActions, useStoreState } from '../store/store';
 import { Container, Grid, Button, Divider, Dropdown, Segment, SegmentGroup, Input, Icon, Label, Popup } from 'semantic-ui-react';
-import { TerminalProfile, CursorShape, CursorShapeToIcon, WindowsFilePathRegex, ScrollBarState } from '../types/types';
+import { TerminalProfile, CursorShape, CursorShapeToIcon, WindowsFilePathRegex, ScrollBarState, ImageStretchMode } from '../types/types';
 import { ColorPickerPopup } from './ColorChangePickerPopUp';
-
-
-
 
 
 const ConfigProfilesPage = () => {
@@ -20,7 +17,6 @@ const ConfigProfilesPage = () => {
         setCurrentProfile({ ...curProfile, ...obj });
     }
 
-    console.log(profiles)
     return (
         <Container>
             <br />
@@ -118,6 +114,29 @@ const ConfigProfilesPage = () => {
                     </ColorPickerPopup>
                 </Segment>
 
+                <Segment>
+                    <Input icon='image outline' fluid label='Background Image Path'  value={curProfile.backgroundImage} onChange={e => setSpecificProfile({ backgroundImage: e.target.value })}
+                    />
+                </Segment>
+
+                <Segment>
+                    <Input fluid label='Background Image Opacity' type='number' value={curProfile.backgroundImageOpacity} onChange={e => setSpecificProfile({ backgroundImageOpacity: Number.parseFloat(e.target.value) })}
+                    
+                    error={ curProfile.backgroundImageOpacity!=undefined && (curProfile.backgroundImageOpacity<0 || curProfile.backgroundImageOpacity>1)} 
+                    />
+                </Segment>
+
+                <Segment>
+                    <Label content='Background Image Stretch Mode' pointing='right' icon='image' size='large' />
+                    <Dropdown button inline text={curProfile.backgroundImageStretchMode}
+                        options={Object.entries(ImageStretchMode).map(mode => ({ text: mode[0], value: mode[1]}))}
+                        onChange={(e, data) => {
+                            if (typeof data.value === 'string') {
+                                setSpecificProfile({ backgroundImageStretchMode: data.value })
+                            }
+                        }}
+                    />
+                </Segment>
 
                 <Segment>
                     <Input fluid label='History Size' value={curProfile.historySize} onChange={e => setSpecificProfile({ historySize: Number.parseInt(e.target.value) })} type='number' />
@@ -159,6 +178,20 @@ const ConfigProfilesPage = () => {
                 <Segment>
                     <Input fluid label='Tab Title' value={curProfile.tabTitle} onChange={e => setSpecificProfile({ tabTitle: e.target.value })} />
                 </Segment>
+
+                {/* <Segment>
+                    <Input fluid label='Cursor Height' type='number' value={curProfile.cursorHeight} onChange={e => setSpecificProfile({ cursorHeight: Number.parseFloat(e.target.value)})} />
+                </Segment>
+ */}
+                <Segment>
+                    <Input fluid label='Foreground' value={curProfile.foreground}/>
+
+                    <ColorPickerPopup value={curProfile.foreground} onChange={e=>setSpecificProfile({foreground:e.hex})} >
+                        <div style={{ height: '100px', width: '100%', backgroundColor: curProfile.foreground }}></div>
+                    </ColorPickerPopup>
+                </Segment>
+
+
 
             </SegmentGroup>
 
