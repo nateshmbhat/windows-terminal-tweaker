@@ -31,7 +31,7 @@ const ConfigGlobalsPage = () => {
                 }}
                 />
 
-            <Segment fluid size='big' color='purple'  >
+            <Segment size='big' color='purple'  >
                 <Button toggle content="Always Show Tabs" active={globals.alwaysShowTabs} onClick={() => setGlobals({
                     ...globals,
                     alwaysShowTabs: !globals.alwaysShowTabs
@@ -76,7 +76,7 @@ const ConfigGlobalsPage = () => {
                 </Segment.Group>
 
                 <Segment compact size='large'>
-                    <Dropdown text="Requested Theme" defaultSelectedLabel={globals.requestedTheme} className='icon' icon='theme' floating labeled button >
+                    <Dropdown text="Requested Theme" className='icon' icon='theme' floating labeled button >
                         <Dropdown.Menu >
                             <Dropdown.Item onClick={() => {
                                 setGlobals({ ...globals, requestedTheme: RequestedThemeOptions.system })

@@ -51,9 +51,6 @@ const ConfigProfilesPage = () => {
         setCurrentProfile({ ...curProfile, ...obj });
     }
 
-    
-
-
     const addNewProfile = () => {
         let newprofile: TerminalProfile = { ...profiles[0] }; //deepcopy first profile
         newprofile.name = 'New Profile';
