@@ -8,6 +8,35 @@ import { v4 as uuid4 } from 'uuid';
 
 
 
+const InputFieldBarWithLabel = (props: {
+    property : string , 
+    value : string | number |undefined  ,
+    label : string , 
+    error?  : boolean , 
+    type? : 'string'|'number' |'int'  | 'float' , 
+    setSpecificProfile : (obj:any)=>void ,
+}) => {
+
+    let updateObject: any= {} 
+
+    return(
+    <Segment>
+        <Input fluid  type={props.type==='float' || props.type==='int'?'number' : props.type} label={props.label} value={props.value} onChange={e => { 
+            let value = e.target.value ; 
+            updateObject[props.property] = value ; 
+            if(props.type==='string')
+                updateObject[props.property] =  value ; 
+            else if (props.type==='number') updateObject[props.property] = Number.parseFloat(value) ; 
+            else if (props.type==='int') updateObject[props.property] = Number.parseInt(value) ; 
+            else if (props.type==='float') updateObject[props.property] = Number.parseFloat(value) ; 
+
+            props.setSpecificProfile(updateObject)}
+        }
+            error={props.error}
+        />
+    </Segment>
+    )
+}
 
 
 const ConfigProfilesPage = () => {
@@ -22,34 +51,7 @@ const ConfigProfilesPage = () => {
         setCurrentProfile({ ...curProfile, ...obj });
     }
 
-    const InputFieldBarWithLabel = (props: {
-        property : string , 
-        value : string | number |undefined  ,
-        label : string , 
-        error?  : boolean , 
-        type? : 'string'|'number' |'int'  | 'float'
-    }) => {
-
-        let updateObject: any= {} 
-
-        return(
-        <Segment>
-            <Input fluid  type={props.type==='float' || props.type==='int'?'number' : props.type} label={props.label} value={props.value} onChange={e => { 
-                let value = e.target.value ; 
-                if(props.type==='string')
-                    updateObject[props.property] =  value ; 
-                else if (props.type==='number') updateObject[props.property] = Number.parseFloat(value) ; 
-                else if (props.type==='int') updateObject[props.property] = Number.parseInt(value) ; 
-                else if (props.type==='float') updateObject[props.property] = Number.parseFloat(value) ; 
-
-                setSpecificProfile(updateObject)}
-            }
-                error={props.error}
-            />
-        </Segment>
-        )
-    }
-
+    
 
 
     const addNewProfile = () => {
@@ -102,29 +104,21 @@ const ConfigProfilesPage = () => {
                     </Grid.Row>
                 </Segment>
 
+
+
                 <Segment>
                     {/* LET THIS FIELD BE READ ONLY */}
                     <Input fluid label='Profile ID' icon={<Icon name='circle outline' />} value={curProfile.guid} />
                 </Segment>
 
-                <Segment>
-                    <Input fluid label='Profile Name' value={curProfile.name} onChange={e => setSpecificProfile({ name: e.target.value })} />
-                </Segment>
 
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='Profile Name'  property={'name'} value={curProfile.name} />
 
-                <Segment>
-                    <Input fluid label='Font face' value={curProfile.fontFace} onChange={e => setSpecificProfile({ fontFace: e.target.value })} />
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='Font face'  property={'fontFace'} value={curProfile.fontFace} />
 
-                </Segment>
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='Font Size' type='int'  property={'fontSize'} value={curProfile.fontSize} />
 
-                <Segment>
-                    <Input fluid type='number' label='Font Size' value={curProfile.fontSize} onChange={e => setSpecificProfile({ fontSize: Number.parseInt(e.target.value) })} />
-                </Segment>
-
-
-                <Segment>
-                    <Input fluid label='Command Line' value={curProfile.commandline} onChange={e => setSpecificProfile({ commandline: e.target.value })} />
-                </Segment>
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='Command Line' property={'commandline'} value={curProfile.commandline} />
 
                 <Segment>
                     <Label content='Cursor Shape' pointing='right' icon={<Icon name='i cursor' />} size='large' />
@@ -170,12 +164,8 @@ const ConfigProfilesPage = () => {
                 </Segment>
 
 
-                <Segment>
-                    <Input fluid label='Background Image Opacity' type='number' value={curProfile.backgroundImageOpacity} onChange={e => setSpecificProfile({ backgroundImageOpacity: Number.parseFloat(e.target.value) })}
 
-                        error={curProfile.backgroundImageOpacity != undefined && (curProfile.backgroundImageOpacity < 0 || curProfile.backgroundImageOpacity > 1)}
-                    />
-                </Segment>
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='Background Image Opacity' type='number' error={ curProfile.backgroundImageOpacity != undefined && (curProfile.backgroundImageOpacity < 0 || curProfile.backgroundImageOpacity > 1) } property={'backgroundImageOpacity'} value={curProfile.backgroundImageOpacity} />
 
                 <Segment>
                     <Label content='Background Image Stretch Mode' pointing='right' icon='image' size='large' />
@@ -189,34 +179,18 @@ const ConfigProfilesPage = () => {
                     />
                 </Segment>
 
-                <Segment>
-                    <Input fluid label='History Size' value={curProfile.historySize} onChange={e => setSpecificProfile({ historySize: Number.parseInt(e.target.value) })} type='number' />
-                </Segment>
 
-                <InputFieldBarWithLabel label='Icon Filepath' error={profileIconError} property={'icon'} value={curProfile.icon} />
-{/* 
-                <Segment>
-                    <Input fluid label='Icon Filepath' value={curProfile.icon} onChange={e => setSpecificProfile({ icon: e.target.value })}
-                        error={profileIconError}
-                    />
-                </Segment> */}
 
-                <InputFieldBarWithLabel label='Acrylic opacity' type='float' error={ curProfile.acrylicOpacity > 1 || curProfile.acrylicOpacity < 0} property={'acrylicOpacity'} value={curProfile.acrylicOpacity} />
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='History Size'  property={'historySize'} value={curProfile.historySize} type='int'  />
 
-                {/* <Segment>
-                    <Input fluid type='number' label='Acrylic opacity' value={curProfile.acrylicOpacity} onChange={e => setSpecificProfile({ acrylicOpacity: Number.parseFloat(e.target.value) })}
-                        error={curProfile.acrylicOpacity > 1 || curProfile.acrylicOpacity < 0}
-                    />
-                </Segment>
- */}
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='Icon Filepath' error={profileIconError} property={'icon'} value={curProfile.icon} />
 
-                <Segment>
-                    <Input fluid label='Padding' value={curProfile.padding} onChange={e => setSpecificProfile({ padding: e.target.value })} />
-                </Segment>
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='Acrylic opacity' type='float' error={ curProfile.acrylicOpacity > 1 || curProfile.acrylicOpacity < 0} property={'acrylicOpacity'} value={curProfile.acrylicOpacity} />
 
-                <Segment>
-                    <Input fluid label='Starting Directory' value={curProfile.startingDirectory} onChange={e => setSpecificProfile({ startingDirectory: e.target.value })} />
-                </Segment>
+
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='Padding' property={'padding'} value={curProfile.padding} />
+
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='Starting Directory' property={'startingDirectory'} value={curProfile.startingDirectory} />
 
                 <Segment>
                     <Label size='large' pointing='right' content='Scrollbar State' />
@@ -230,11 +204,10 @@ const ConfigProfilesPage = () => {
                     </Button.Group>
                 </Segment>
 
-                <Segment>
-                    <Input fluid label='Tab Title' value={curProfile.tabTitle} onChange={e => setSpecificProfile({ tabTitle: e.target.value })} />
-                </Segment>
 
-                <Segment>
+                <InputFieldBarWithLabel setSpecificProfile={setSpecificProfile} label='Tab Title' property={'tabTitle'} value={curProfile.tabTitle} />
+
+               <Segment>
                     <Popup
                         mouseEnterDelay={500}
                         trigger={
