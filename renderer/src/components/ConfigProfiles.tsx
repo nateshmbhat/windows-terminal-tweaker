@@ -6,6 +6,10 @@ import { ColorPickerPopup } from './ColorChangePickerPopUp';
 import { v4 as uuid4 } from 'uuid';
 
 
+
+
+
+
 const ConfigProfilesPage = () => {
     const [profiles, schemes] = useStoreState((state) => [state.profiles, state.schemes])
     const [setStoreProfile, setStoreProfiles] = useStoreActions((actions) => [actions.setSpecificProfile, actions.setProfiles]);
@@ -17,6 +21,37 @@ const ConfigProfilesPage = () => {
         setStoreProfile({ profile: { ...curProfile, ...obj }, id: curProfile.guid });
         setCurrentProfile({ ...curProfile, ...obj });
     }
+
+    const InputFieldBarWithLabel = (props: {
+        property : string , 
+        value : string | number |undefined  ,
+        label : string , 
+        error?  : boolean , 
+        type? : 'string'|'number' |'int'  | 'float'
+    }) => {
+
+        let updateObject: any= {} 
+
+        return(
+        <Segment>
+            <Input fluid  type={props.type==='float' || props.type==='int'?'number' : props.type} label={props.label} value={props.value} onChange={e => { 
+                let value = e.target.value ; 
+                if(props.type==='string')
+                    updateObject[props.property] =  value ; 
+                else if (props.type==='number') updateObject[props.property] = Number.parseFloat(value) ; 
+                else if (props.type==='int') updateObject[props.property] = Number.parseInt(value) ; 
+                else if (props.type==='float') updateObject[props.property] = Number.parseFloat(value) ; 
+
+                setSpecificProfile(updateObject)}
+            }
+                error={props.error}
+            />
+        </Segment>
+        )
+    }
+
+
+
     const addNewProfile = () => {
         let newprofile: TerminalProfile = { ...profiles[0] }; //deepcopy first profile
         newprofile.name = 'New Profile';
@@ -126,9 +161,9 @@ const ConfigProfilesPage = () => {
 
                 <Segment>
                     <Popup mouseEnterDelay={300}
-                    trigger={
-                        <Input icon='image outline' fluid label='Background Image Path' value={curProfile.backgroundImage} onChange={e => setSpecificProfile({ backgroundImage: e.target.value })}/>
-                    } 
+                        trigger={
+                            <Input icon='image outline' fluid label='Background Image Path' value={curProfile.backgroundImage} onChange={e => setSpecificProfile({ backgroundImage: e.target.value })} />
+                        }
                     >
                         Works with 'UseAcrylic' Off
                     </Popup>
@@ -158,18 +193,22 @@ const ConfigProfilesPage = () => {
                     <Input fluid label='History Size' value={curProfile.historySize} onChange={e => setSpecificProfile({ historySize: Number.parseInt(e.target.value) })} type='number' />
                 </Segment>
 
+                <InputFieldBarWithLabel label='Icon Filepath' error={profileIconError} property={'icon'} value={curProfile.icon} />
+{/* 
                 <Segment>
                     <Input fluid label='Icon Filepath' value={curProfile.icon} onChange={e => setSpecificProfile({ icon: e.target.value })}
                         error={profileIconError}
                     />
-                </Segment>
+                </Segment> */}
 
-                <Segment>
+                <InputFieldBarWithLabel label='Acrylic opacity' type='float' error={ curProfile.acrylicOpacity > 1 || curProfile.acrylicOpacity < 0} property={'acrylicOpacity'} value={curProfile.acrylicOpacity} />
+
+                {/* <Segment>
                     <Input fluid type='number' label='Acrylic opacity' value={curProfile.acrylicOpacity} onChange={e => setSpecificProfile({ acrylicOpacity: Number.parseFloat(e.target.value) })}
                         error={curProfile.acrylicOpacity > 1 || curProfile.acrylicOpacity < 0}
                     />
                 </Segment>
-
+ */}
 
                 <Segment>
                     <Input fluid label='Padding' value={curProfile.padding} onChange={e => setSpecificProfile({ padding: e.target.value })} />

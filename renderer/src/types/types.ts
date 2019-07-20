@@ -18,6 +18,7 @@ export interface StoreType {
     setProfiles: Action<StoreType,TerminalProfile[]> , 
     setSpecificProfile : Action<StoreType,{profile : TerminalProfile , id : string } > , 
     setSchemes: Action<StoreType,TerminalColorScheme[]> , 
+    setSpecificScheme: Action<StoreType,TerminalColorScheme> , 
 }
 export interface WindowsTerminalConfigType{
     globals : TerminalGlobals ,

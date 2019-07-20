@@ -1,17 +1,47 @@
 import * as React from 'react';
-import { Container, Grid, Button, Divider, Segment, Dropdown, DropdownMenu, DropdownItem, Icon, DropdownDivider, SegmentGroup, Input } from 'semantic-ui-react';
-import { useStoreState } from '../store/store';
-const ConfigSchemesPage = () => {
+import { Container, Grid, Button, Divider, Segment, Dropdown, DropdownMenu, DropdownItem, Icon, DropdownDivider, SegmentGroup, Input, FormField, FormGroup, Form } from 'semantic-ui-react';
+import { useStoreState, useStoreActions } from '../store/store';
+import { ColorPickerPopup } from './ColorChangePickerPopUp';
+import { TerminalColorScheme } from '../types/types';
 
-    const [schemes] = useStoreState((state) => [state.schemes])
+
+const SchemeColorBar = (props: { property: string, value: string , updateCurrentScheme:(obj:any)=>void }) => {
+    return (
+        <Segment>
+            <div style={{ display: 'flex' }}>
+                <div style={{ width: '100%' }}>
+                    <Input fluid label={props.property} value={props.value} />
+                </div>
+
+                <ColorPickerPopup mouseEnterDelay={0} value={props.value} onChange={e => {
+                    let updateObject: any = {}
+                    updateObject[props.property] = e.hex;
+                    props.updateCurrentScheme(updateObject)
+                }
+                }>
+                    <div style={{ height: '38px', width: '75px', backgroundColor: props.value, borderRadius: '2px' }}></div>
+                </ColorPickerPopup>
+            </div>
+        </Segment>
+    );
+}
+
+
+
+const ConfigSchemesPage = () => {
+    const schemes = useStoreState((state) => state.schemes)
+    const setSpecificScheme = useStoreActions(actions => actions.setSpecificScheme)
     const [curScheme, setCurrentScheme] = React.useState(schemes[0]);
+    let curSchemeCopy = { ...curScheme };
+    delete curSchemeCopy.name;
 
     const addNewScheme = () => {
 
     }
 
-    const updateCurrentTheme = (obj: any) => {
+    const updateCurrentScheme = (obj: any) => {
         setCurrentScheme({ ...curScheme, ...obj });
+        setSpecificScheme({ ...curScheme, ...obj })
     }
 
     return (
@@ -28,7 +58,7 @@ const ConfigSchemesPage = () => {
                 <Dropdown text={'Scheme : ' + curScheme.name} fluid >
                     <DropdownMenu > {
                         schemes.map(p => {
-                            return <DropdownItem key={p.name} text={p.name} value={p.name} selected={p.name === curScheme.name} active={p.name === curScheme.name} onClick={e => setCurrentScheme(p)}
+                            return <DropdownItem key={`${p.name} ${Math.random()}`} text={p.name} value={p.name} selected={p.name === curScheme.name} active={p.name === curScheme.name} onClick={e => setCurrentScheme(p)}
                                 icon={<Icon name='circle outline' />}
                             />
                         })
@@ -45,17 +75,18 @@ const ConfigSchemesPage = () => {
             <SegmentGroup>
                 <Segment>
                     <Input fluid label='Scheme Name' icon={<Icon name='circle outline' />} value={curScheme.name}
-                        onChange={e => updateCurrentTheme({ name: e.target.value })}
+                        onChange={e => updateCurrentScheme({ name: e.target.value })}
                     />
                 </Segment>
 
-                <Segment>
-                    <Input fluid label='Background' value={curScheme.background} onChange={e => updateCurrentTheme({ background: e.target.value })} />
-                </Segment>
-
-
+                {
+                    Object.entries(curSchemeCopy).map(keyVal => {
+                        return (
+                            <SchemeColorBar key={keyVal[0]} property={keyVal[0]} value={keyVal[1]} updateCurrentScheme={updateCurrentScheme}/>
+                        )
+                    })
+                }
             </SegmentGroup>
-
         </Container>
     )
 }
