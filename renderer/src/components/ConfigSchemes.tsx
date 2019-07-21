@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Container, Grid, Button, Divider, Segment, Dropdown, DropdownMenu, DropdownItem, Icon, DropdownDivider, SegmentGroup, Input, FormField, FormGroup, Form } from 'semantic-ui-react';
+import { Container, Grid, Button, Divider, Segment, Dropdown, DropdownMenu, DropdownItem, Icon, DropdownDivider, SegmentGroup, Input, FormField, FormGroup, Form, Menu } from 'semantic-ui-react';
 import { useStoreState, useStoreActions } from '../store/store';
 import { ColorPickerPopup } from './ColorChangePickerPopUp';
-import { TerminalColorScheme } from '../types/types';
+import { NavBar } from './NavBar';
 
 
-const SchemeColorBar = (props: { property: string, value: string , updateCurrentScheme:(obj:any)=>void }) => {
+const SchemeColorBar = (props: { property: string, value: string, updateCurrentScheme: (obj: any) => void }) => {
     return (
         <Segment>
             <div style={{ display: 'flex' }}>
@@ -45,49 +45,55 @@ const ConfigSchemesPage = () => {
     }
 
     return (
-        <Container>
-            <br />
-            <Grid.Row centered textAlign='center' verticalAlign='middle' stretched>
-                <Button fluid basic size='massive' color='blue' content="Schemes" icon='theme' />
-            </Grid.Row>
+        <>
+            <NavBar />
 
+            <Container>
+                <br />
+                <Grid.Row centered textAlign='center' verticalAlign='middle' stretched>
+                    <Button fluid basic size='massive' color='blue' content="Schemes" icon='theme' />
+                </Grid.Row>
 
-            <Divider />
+                <Divider />
 
-            <Segment raised size='large' attached color='violet'>
-                <Dropdown text={'Scheme : ' + curScheme.name} fluid >
-                    <DropdownMenu > {
-                        schemes.map(p => {
-                            return <DropdownItem key={`${p.name} ${Math.random()}`} text={p.name} value={p.name} selected={p.name === curScheme.name} active={p.name === curScheme.name} onClick={e => setCurrentScheme(p)}
-                                icon={<Icon name='circle outline' />}
-                            />
-                        })
-                    }
-                        <DropdownDivider />
+                <Segment raised size='large' attached color='violet'>
+                    <Dropdown text={'Scheme : ' + curScheme.name} fluid >
+                        <DropdownMenu > {
+                            schemes.map(p => {
+                                return <DropdownItem key={`${p.name} ${Math.random()}`} text={p.name} value={p.name} selected={p.name === curScheme.name} active={p.name === curScheme.name} onClick={e => setCurrentScheme(p)}
+                                    icon={<Icon name='circle outline' />}
+                                />
+                            })
+                        }
+                            <DropdownDivider />
 
-                        <DropdownItem>
-                            <Button content='Add New Scheme' fluid onClick={e => addNewScheme()} />
-                        </DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-            </Segment>
-
-            <SegmentGroup>
-                <Segment>
-                    <Input fluid label='Scheme Name' icon={<Icon name='circle outline' />} value={curScheme.name}
-                        onChange={e => updateCurrentScheme({ name: e.target.value })}
-                    />
+                            <DropdownItem>
+                                <Button content='Add New Scheme' fluid onClick={e => addNewScheme()} />
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                 </Segment>
 
-                {
-                    Object.entries(curSchemeCopy).map(keyVal => {
-                        return (
-                            <SchemeColorBar key={keyVal[0]} property={keyVal[0]} value={keyVal[1]} updateCurrentScheme={updateCurrentScheme}/>
-                        )
-                    })
-                }
-            </SegmentGroup>
-        </Container>
+
+                <SegmentGroup>
+                    <Segment>
+                        <Input fluid label='Scheme Name' icon={<Icon name='circle outline' />} value={curScheme.name}
+                            onChange={e => updateCurrentScheme({ name: e.target.value })}
+                        />
+                    </Segment>
+
+                    {
+                        Object.entries(curSchemeCopy).map(keyVal => {
+                            return (
+                                <SchemeColorBar key={keyVal[0]} property={keyVal[0]} value={keyVal[1]} updateCurrentScheme={updateCurrentScheme} />
+                            )
+                        })
+                    }
+                </SegmentGroup>
+
+            </Container>
+        </>
+
     )
 }
 

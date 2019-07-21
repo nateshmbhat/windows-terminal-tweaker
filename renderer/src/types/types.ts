@@ -19,6 +19,14 @@ export interface StoreType {
     setSpecificProfile : Action<StoreType,{profile : TerminalProfile , id : string } > , 
     setSchemes: Action<StoreType,TerminalColorScheme[]> , 
     setSpecificScheme: Action<StoreType,TerminalColorScheme> , 
+    setSpecificKeyBinding : Action<StoreType,{command : string , keys : [string]}> , 
+}
+
+export enum NavLinkPaths {
+    schemes = '/config/schemes' , 
+    profiles = '/config/profiles' , 
+    globals = '/config/globals' , 
+    home = '/'
 }
 export interface WindowsTerminalConfigType{
     globals : TerminalGlobals ,

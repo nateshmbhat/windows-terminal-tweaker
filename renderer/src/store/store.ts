@@ -92,7 +92,22 @@ export const initialState: StoreType = {
             }
         }
         sendTerminalConfigChange({ profiles: state.profiles, schemes: state.schemes, globals: state.globals })
+    }) , 
+
+    setSpecificKeyBinding : action((state , obj )=>{
+        state.globals.keybindings = state.globals.keybindings.map((k)=>{
+            if(k.command===obj.command){
+                return {
+                    command : k.command , 
+                    keys : obj.keys
+                }
+            }
+            else return k ; 
+        })
+    
+        sendTerminalConfigChange({ profiles: state.profiles, schemes: state.schemes, globals: state.globals })
     })
+
 }
 
 

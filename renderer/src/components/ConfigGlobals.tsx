@@ -1,13 +1,26 @@
-import * as React from 'react';
-import { Container, Button, Grid, Segment, Divider, Input, Dropdown } from 'semantic-ui-react';
+import * as React from 'react'; import { Container, Button, Grid, Segment, Divider, Input, Dropdown, SegmentGroup, Label, Icon } from 'semantic-ui-react';
 import { useStoreState, useStoreActions } from '../store/store';
-import { RequestedThemeOptions } from '../types/types';
+import { RequestedThemeOptions, TerminalKeyBinding } from '../types/types';
+import { NavBar } from './NavBar';
+
+
+const KeyBindingBar = (props: {
+    keybinding: TerminalKeyBinding,
+    setKeybinding: (obj: { command: string, keys: [string] })=>void}) => {
+    return (<Segment>
+        <Input value={props.keybinding.keys[0]} label={props.keybinding.command} onChange={
+            e => props.setKeybinding({ command: props.keybinding.command, keys: [e.target.value] })
+        } />
+    </Segment>)
+}
 
 const ConfigGlobalsPage = () => {
-    const [globals ,profiles ]= useStoreState((state) => [state.globals,state.profiles])
-    const setGlobals = useStoreActions((actions) => actions.setGlobals);
+    const [globals, profiles] = useStoreState((state) => [state.globals, state.profiles])
+    const [setGlobals , setKeybinding ] = useStoreActions((actions) => [actions.setGlobals , actions.setSpecificKeyBinding ] );
     console.log(globals)
     return (
+        <>
+        <NavBar/>
         <Container>
             <br />
             <Grid.Row centered textAlign='center' verticalAlign='middle' stretched>
@@ -15,21 +28,21 @@ const ConfigGlobalsPage = () => {
             </Grid.Row>
             <Divider />
 
-            <Dropdown button selection fluid labeled floating icon='setting' size='large' className='icon' text={'Default Profile : ' + (profiles.filter(e=>e.guid===globals.defaultProfile)[0].name) }
-            value={globals.defaultProfile}
-                options={profiles.map(profile=>({
-                    text : profile.name , 
-                    value : profile.guid, 
-                    description : profile.guid  , 
-                    active : profile.guid===globals.defaultProfile
+            <Dropdown button selection fluid labeled floating icon='setting' className='icon' text={'Default Profile : ' + (profiles.filter(e => e.guid === globals.defaultProfile)[0].name)}
+                value={globals.defaultProfile}
+                options={profiles.map(profile => ({
+                    text: profile.name,
+                    value: profile.guid,
+                    description: profile.guid,
+                    active: profile.guid === globals.defaultProfile
                 }))
-            }
-                onChange={(e,data) => {
-                    console.log(e , data) ; 
-                    if(typeof data.value=='string')
+                }
+                onChange={(e, data) => {
+                    console.log(e, data);
+                    if (typeof data.value == 'string')
                         setGlobals({ ...globals, defaultProfile: data.value })
                 }}
-                />
+            />
 
             <Segment size='big' color='purple'  >
                 <Button toggle content="Always Show Tabs" active={globals.alwaysShowTabs} onClick={() => setGlobals({
@@ -76,7 +89,13 @@ const ConfigGlobalsPage = () => {
                 </Segment.Group>
 
                 <Segment compact size='large'>
-                    <Dropdown text="Requested Theme" className='icon' icon='theme' floating labeled button >
+                    <Label content='Requested Theme' pointing='right'
+                        icon={<Icon name='theme' color={
+                            globals.requestedTheme === RequestedThemeOptions.system ? 'blue' :
+                                globals.requestedTheme === RequestedThemeOptions.light ? 'grey' : 'black'
+                        } />}
+                        size='large' />
+                    <Dropdown text={globals.requestedTheme} button  >
                         <Dropdown.Menu >
                             <Dropdown.Item onClick={() => {
                                 setGlobals({ ...globals, requestedTheme: RequestedThemeOptions.system })
@@ -94,7 +113,23 @@ const ConfigGlobalsPage = () => {
                     </Dropdown>
                 </Segment>
             </Grid.Column>
+
+
+            <Divider section />
+
+
+            <SegmentGroup>
+                <Segment>
+                    <Label ribbon size='huge' content={'Keyboard Shortcuts'} />
+                </Segment>
+
+                <KeyBindingBar keybinding={globals.keybindings[0]} setKeybinding={setKeybinding} />
+
+            </SegmentGroup>
+
+
         </Container>
+        </>
     );
 }
 

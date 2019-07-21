@@ -4,6 +4,7 @@ import { Container, Grid, Button, Divider, Dropdown, Segment, SegmentGroup, Inpu
 import { TerminalProfile, CursorShape, CursorShapeToIcon, WindowsFilePathRegex, ScrollBarState, ImageStretchMode } from '../types/types';
 import { ColorPickerPopup } from './ColorChangePickerPopUp';
 import { v4 as uuid4 } from 'uuid';
+import { NavBar } from './NavBar';
 
 
 
@@ -59,6 +60,8 @@ const ConfigProfilesPage = () => {
     }
 
     return (
+        <>
+        <NavBar/>
         <Container>
             <br />
             <Grid.Row centered textAlign='center' verticalAlign='middle' stretched>
@@ -223,6 +226,7 @@ const ConfigProfilesPage = () => {
             </SegmentGroup>
 
         </Container>
+        </>
     );
 }
 
