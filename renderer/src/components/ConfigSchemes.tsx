@@ -3,6 +3,7 @@ import { Container, Grid, Button, Divider, Segment, Dropdown, DropdownMenu, Drop
 import { useStoreState, useStoreActions } from '../store/store';
 import { ColorPickerPopup } from './ColorChangePickerPopUp';
 import { NavBar } from './NavBar';
+import { NavLinkPaths } from '../types/types';
 
 
 const SchemeColorBar = (props: { property: string, value: string, updateCurrentScheme: (obj: any) => void }) => {
@@ -48,7 +49,7 @@ const ConfigSchemesPage = () => {
 
     return (
         <>
-            <NavBar />
+            <NavBar navPath={NavLinkPaths.schemes} />
 
             <Container>
                 <br />

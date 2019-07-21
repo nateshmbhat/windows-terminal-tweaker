@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStoreActions, useStoreState } from '../store/store';
 import { Container, Grid, Button, Divider, Dropdown, Segment, SegmentGroup, Input, Icon, Label, Popup, DropdownMenu, DropdownItem, DropdownDivider } from 'semantic-ui-react';
-import { TerminalProfile, CursorShape, CursorShapeToIcon, WindowsFilePathRegex, ScrollBarState, ImageStretchMode } from '../types/types';
+import { TerminalProfile, CursorShape, CursorShapeToIcon, WindowsFilePathRegex, ScrollBarState, ImageStretchMode, NavLinkPaths } from '../types/types';
 import { ColorPickerPopup } from './ColorChangePickerPopUp';
 import { v4 as uuid4 } from 'uuid';
 import { NavBar } from './NavBar';
@@ -61,7 +61,7 @@ const ConfigProfilesPage = () => {
 
     return (
         <>
-        <NavBar/>
+        <NavBar navPath={NavLinkPaths.profiles}/>
         <Container>
             <br />
             <Grid.Row centered textAlign='center' verticalAlign='middle' stretched>

@@ -1,6 +1,6 @@
 import * as React from 'react'; import { Container, Button, Grid, Segment, Divider, Input, Dropdown, SegmentGroup, Label, Icon } from 'semantic-ui-react';
 import { useStoreState, useStoreActions } from '../store/store';
-import { RequestedThemeOptions, TerminalKeyBinding } from '../types/types';
+import { RequestedThemeOptions, TerminalKeyBinding, NavLinkPaths } from '../types/types';
 import { NavBar } from './NavBar';
 
 
@@ -100,7 +100,7 @@ const ConfigGlobalsPage = () => {
     console.log(globals)
     return (
         <>
-            <NavBar />
+            <NavBar navPath={NavLinkPaths.globals}  />
             <Container>
                 <br />
                 <Grid.Row centered textAlign='center' verticalAlign='middle' stretched>
