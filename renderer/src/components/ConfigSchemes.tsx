@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Grid, Button, Divider, Segment, Dropdown, DropdownMenu, DropdownItem, Icon, DropdownDivider, SegmentGroup, Input, FormField, FormGroup, Form, Menu } from 'semantic-ui-react';
+import { Container, Grid, Button, Divider, Segment, Dropdown, DropdownMenu, DropdownItem, Icon, DropdownDivider, SegmentGroup, Input } from 'semantic-ui-react';
 import { useStoreState, useStoreActions } from '../store/store';
 import { ColorPickerPopup } from './ColorChangePickerPopUp';
 import { NavBar } from './NavBar';

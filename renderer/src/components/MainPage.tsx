@@ -11,7 +11,6 @@ const MainPage = ()=>{
     return (
         <Router >
             <Route path={NavLinkPaths.home} exact component={InitialSettingChooser}  />
-            {/* <Route path={NavLinkPaths} exact component={ConfigPathModal}  /> */}
             <Route path={NavLinkPaths.globals} exact component={ConfigGlobalsPage}  />
             <Route path={NavLinkPaths.profiles} exact component={ConfigProfilesPage}  />
             <Route path={NavLinkPaths.schemes} exact component={ConfigSchemesPage}  />
