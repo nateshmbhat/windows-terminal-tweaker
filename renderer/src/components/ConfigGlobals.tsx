@@ -73,6 +73,10 @@ const KeyBindingBar = (props: {
                         case 18: //alt
                             if (value.indexOf('alt') < 0) props.setKeybinding({ command: props.keybinding.command, keys: [value + 'alt+'] })
                             break;
+                        
+                        case 9 : //Tab
+                            if (value.indexOf('tab') < 0) props.setKeybinding({ command: props.keybinding.command, keys: [value + 'tab'] })
+                            break;
 
                         default:
                             let newvalue = value + (printableKey&& getLowerCaseMap(e.key)||'')

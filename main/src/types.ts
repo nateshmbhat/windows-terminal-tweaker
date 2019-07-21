@@ -3,4 +3,5 @@ export enum Channels{
     configLoadFail = 'config-load-fail' ,
     terminalConfigChange = 'terminal-config-change' ,
     terminalConfigPath = 'terminal-config-path' ,
+    getTerminalConfigData = 'get-terminal-config-data' , 
 }

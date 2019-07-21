@@ -6,17 +6,18 @@ const electron = window.require('electron') ;
 const ipcRenderer : IpcRenderer = electron.ipcRenderer
 
 const registerListeners = ()=>{
-    ipcRenderer.on( Channels.configLoadSuccess , (event:IpcMessageEvent , args:WindowsTerminalConfigType)=>{
-        console.log(args);
+    ipcRenderer.on( Channels.configLoadSuccess , (event:IpcMessageEvent , args:string)=>{
+        let terminalConfigObject : WindowsTerminalConfigType = JSON.parse(args) ; 
+        console.log(terminalConfigObject) ; 
         const actions = store.getActions() ; 
 
         const {setLoadSuccess , setLoadFail , setGlobals , setProfiles , setSchemes}  = actions ; 
 
         setLoadSuccess(true) ;         
         setLoadFail(false) ;         
-        setGlobals(args.globals)
-        setProfiles(args.profiles)
-        setSchemes(args.schemes) ;
+        setGlobals(terminalConfigObject.globals)
+        setProfiles(terminalConfigObject.profiles)
+        setSchemes(terminalConfigObject.schemes) ;
     })
 
     ipcRenderer.on( Channels.configLoadFail , (event:IpcMessageEvent , args:any)=>{
@@ -24,6 +25,8 @@ const registerListeners = ()=>{
           store.getActions().setLoadFail(true) ; 
           store.getActions().setLoadSuccess(false) ; 
     })
+
+    
 }
 
 export {registerListeners} ; 

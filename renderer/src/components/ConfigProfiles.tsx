@@ -52,6 +52,7 @@ const ConfigProfilesPage = () => {
     const profileIconError: boolean = typeof curProfile.icon === 'string' && (!!curProfile.icon.match(WindowsFilePathRegex) || curProfile.icon.indexOf('ms-appx') < 0)
 
     const setSpecificProfile = (obj: any) => {
+        console.log("Setting current profile : " , obj)
         setStoreProfile({ profile: { ...curProfile, ...obj }, id: curProfile.guid });
         setCurrentProfile({ ...curProfile, ...obj });
     }
@@ -263,6 +264,8 @@ const ConfigProfilesPage = () => {
                     </Segment>
 
                 </SegmentGroup>
+
+                <Divider/>
 
             </Container>
         </>
