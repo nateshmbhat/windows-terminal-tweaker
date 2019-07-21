@@ -65,7 +65,7 @@ const ConfigProfilesPage = () => {
         <Container>
             <br />
             <Grid.Row centered textAlign='center' verticalAlign='middle' stretched>
-                <Button fluid basic size='massive' color='blue' content="Profiles" icon='user' />
+                <Button fluid basic size='massive' color='violet' content="Profiles" icon='user' />
             </Grid.Row>
 
 

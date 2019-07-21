@@ -84,6 +84,7 @@ const KeyBindingBar = (props: {
             onChange={
                 e => { 
                     let value = e.target.value ; 
+                    console.log("onchange value = " , value)
                     if(value.length>0 && !value.endsWith('+')) return ; 
                     props.setKeybinding({ command: props.keybinding.command, keys: [e.target.value] }) 
                 } 
@@ -103,7 +104,7 @@ const ConfigGlobalsPage = () => {
             <Container>
                 <br />
                 <Grid.Row centered textAlign='center' verticalAlign='middle' stretched>
-                    <Button fluid basic size='huge' color='blue' content="Globals" />
+                    <Button fluid basic size='massive' color='blue'  icon={<Icon color='grey' name='setting'/>} content="Global Settings" />
                 </Grid.Row>
                 <Divider />
 
@@ -211,6 +212,7 @@ const ConfigGlobalsPage = () => {
                     }
 
                 </SegmentGroup>
+                <Divider/>
 
 
             </Container>

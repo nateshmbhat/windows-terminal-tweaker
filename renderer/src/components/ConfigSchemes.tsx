@@ -30,13 +30,15 @@ const SchemeColorBar = (props: { property: string, value: string, updateCurrentS
 
 const ConfigSchemesPage = () => {
     const schemes = useStoreState((state) => state.schemes)
-    const setSpecificScheme = useStoreActions(actions => actions.setSpecificScheme)
+    const [setSpecificScheme , setSchemes] = useStoreActions(actions => [actions.setSpecificScheme,actions.setSchemes ])
     const [curScheme, setCurrentScheme] = React.useState(schemes[0]);
-    let curSchemeCopy = { ...curScheme };
+    let curSchemeCopy = { ...curScheme }; //copy wouldnt contain the name property and is used to map data into UI components
     delete curSchemeCopy.name;
 
     const addNewScheme = () => {
-
+        let newScheme = {...schemes[0]} ;
+        newScheme.name=`New Scheme ${(Math.floor(Math.random()*1000))}`
+        setSchemes([...schemes , newScheme ]) ; 
     }
 
     const updateCurrentScheme = (obj: any) => {
@@ -90,6 +92,8 @@ const ConfigSchemesPage = () => {
                         })
                     }
                 </SegmentGroup>
+
+                <Divider/>
 
             </Container>
         </>
