@@ -13,11 +13,12 @@ const registerListeners = ()=>{
 
         const {setLoadSuccess , setLoadFail , setGlobals , setProfiles , setSchemes}  = actions ; 
 
-        setLoadSuccess(true) ;         
-        setLoadFail(false) ;         
         setGlobals(terminalConfigObject.globals)
         setProfiles(terminalConfigObject.profiles)
         setSchemes(terminalConfigObject.schemes) ;
+
+        setLoadSuccess(true) ;         
+        setLoadFail(false) ;         
     })
 
     ipcRenderer.on( Channels.configLoadFail , (event:IpcMessageEvent , args:any)=>{

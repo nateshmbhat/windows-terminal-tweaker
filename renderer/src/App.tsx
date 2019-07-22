@@ -5,6 +5,7 @@ import ConfigPathModal from './components/ConfigPathModal';
 import MainPage from './components/MainPage';
 import { registerListeners } from './ListenersAndComms/registerListeners';
 import { sendGetTerminalConfigData } from './ListenersAndComms/messageSender';
+import mouseTrap from 'mousetrap'; 
 
 declare global {
   interface Window {
@@ -19,6 +20,11 @@ const App: React.FC = () => {
   useEffect(() => {
     registerListeners() ; 
     sendGetTerminalConfigData() ; 
+    mouseTrap.bind(['command+r', 'ctrl+r' , 'ctrl+shift+r' , 'ctrl+k'] , (e, combo )=>{
+      console.log("Handling mousetrap keys !" ) ;
+      return false ; 
+    }) ; 
+
   },[])
   return (
     <div className="App">

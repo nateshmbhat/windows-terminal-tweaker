@@ -58,14 +58,15 @@ function createWindow() {
             : `file://${path.join(__dirname, "../build/index.html")}`
     );
 
+    mainWindow.setMenuBarVisibility(false) ; 
 
     mainWindow.on("closed", () => (mainWindow.destroy()));
 
     ipcMain.on(Channels.terminalConfigPath, (event: IpcMessageEvent, msg: any) => {
-        console.log(msg);
+        console.log('terminal config path : ' , msg);
         readFile(msg, (err, data) => {
             if (err) {
-                console.log(err);
+                console.log('Error : ' , err);
                 sendConfigLoadFailure(mainWindow, err.message);
             }
             else {
@@ -76,8 +77,8 @@ function createWindow() {
         })
     })
 
-    ipcMain.on(Channels.getTerminalConfigData , (event: IpcMessageEvent, msg: any) => {
-        console.log(msg);
+    ipcMain.on(Channels.getTerminalConfigData , (event: IpcMessageEvent) => {
+        console.log('Get terminal config data : ' );
         sendConfigLoadSuccess(mainWindow, terminalConfigFileData);
    })
 
@@ -102,9 +103,6 @@ app.on("window-all-closed", () => {
 
 
 app.on("activate", () => {
-
-
-
     if (mainWindow === null) {
         createWindow();
     }
