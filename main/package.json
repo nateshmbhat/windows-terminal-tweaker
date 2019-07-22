@@ -1,9 +1,9 @@
 {
   "name": "electron-react-ts-starter",
   "version": "1.0.0",
-  "main": "./src/index.js",
+  "main": "./src/electron.js",
   "scripts": {
-    "start": "concurrently \"tsc ./src/index.ts -w\"  \"nodemon --exec \"\"wait-on http://localhost:3000 && electron src\"\""
+    "start": "concurrently \"tsc ./src/electron.ts -w\"  \"nodemon --exec \"\"wait-on http://localhost:3000 && electron src/src/electron.js\"\""
   },
   "author": "nateshmbhat",
   "dependencies": {

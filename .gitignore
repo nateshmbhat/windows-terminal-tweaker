@@ -2,6 +2,10 @@
 
 main/src/*.js
 
+renderer/build
+renderer/dist
+renderer/public/*.js
+
 # dependencies
 node_modules/
 /.pnp

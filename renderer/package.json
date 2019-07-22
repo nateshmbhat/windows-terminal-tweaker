@@ -1,16 +1,33 @@
 {
   "name": "electron-react-ts-starter",
   "description": "This is a boilerplate starter for an electron project that uses react with typescript and has some fixes applied for common bugs.",
+  "author": "nateshmbhat",
   "version": "0.1.0",
-  "main": "public/electron.js",
   "private": true,
+  "homepage": "./",
+  "build": {
+    "appId": "com.natesh.windows-terminal-tweaker",
+    "productName": "Terminal Tweaker",
+    "copyright": "Copyright © 2019 Natesh M Bhat",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "assets/app.ico"
+    }
+  },
   "dependencies": {
     "easy-peasy": "^2.6.5",
-    "electron": "^5.0.6",
     "electron-reload": "^1.4.0",
     "mousetrap": "^1.6.3",
     "react": "^16.8.6",
     "react-color": "^2.17.3",
+    "electron-is-dev": "^1.1.0",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
@@ -24,8 +41,9 @@
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
-    "release": "npm react-build && electron-builder --publish=always",
-    "build": "npm react-build && npm electron-build",
+    "react-prebuild": "cp ../main/src/*.js ./public/",
+    "release": "npm run react-prebuild && npm run react-build && electron-builder --publish=always",
+    "build": "npm run react-prebuild && npm run react-build && electron-builder",
     "start": "cross-env BROWSER=none npm run react-start"
   },
   "eslintConfig": {
@@ -48,6 +66,7 @@
     "@types/jest": "24.0.15",
     "@types/mousetrap": "^1.6.3",
     "@types/node": "12.0.10",
+    "electron": "^5.0.6",
     "@types/react": "16.8.22",
     "@types/react-color": "^3.0.1",
     "@types/react-dom": "16.8.4",
