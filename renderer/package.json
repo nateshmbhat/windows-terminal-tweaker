@@ -1,8 +1,12 @@
 {
   "name": "electron-react-ts-starter",
-  "description": "This is a boilerplate starter for an electron project that uses react with typescript and has some fixes applied for common bugs.",
+  "description": "Tweake your windows terminal to heart's content with this app filled beautiful UI components to configure everything about the terminal.",
   "author": "nateshmbhat",
+  "displayName": "Terminal Tweaker",
+  "repository": {"type": "git" , "url": "https://github.com/nateshmbhat/windows-terminal-tweaker"},
   "version": "0.1.0",
+  "keywords": ["terminal-tweaker" , "terminal tweaker" , "tweaker" , "terminal" , "windows terminal tweaker"],
+  "license": "GPL3",
   "private": true,
   "homepage": "./",
   "build": {
@@ -23,14 +27,15 @@
   },
   "dependencies": {
     "easy-peasy": "^2.6.5",
+    "electron-is-dev": "^1.1.0",
     "electron-reload": "^1.4.0",
     "mousetrap": "^1.6.3",
     "react": "^16.8.6",
     "react-color": "^2.17.3",
-    "electron-is-dev": "^1.1.0",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
+    "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.2",
     "typescript": "3.5.2",
     "uuid": "^3.3.2"
@@ -41,9 +46,9 @@
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "electron-build": "electron-builder",
-    "react-prebuild": "cp ../main/src/*.js ./public/",
-    "release": "npm run react-prebuild && npm run react-build && electron-builder --publish=always",
-    "build": "npm run react-prebuild && npm run react-build && electron-builder",
+    "react-prebuild": "cross-env cp ../main/src/*.js ./public/",
+    "release": "tsc ../main/src/electron.ts && npm run react-prebuild && npm run react-build && electron-builder --publish=always",
+    "build": "tsc ../main/src/electron.ts && npm run react-prebuild && npm run react-build && electron-builder",
     "start": "cross-env BROWSER=none npm run react-start"
   },
   "eslintConfig": {

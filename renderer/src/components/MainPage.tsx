@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ConfigPathModal from './ConfigPathModal';
-import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
+import { HashRouter as Router, Route, Link, NavLink } from "react-router-dom";
 import { InitialSettingChooser } from './initialSettingsChooser';
 import { ConfigGlobalsPage } from './ConfigGlobals';
 import { ConfigProfilesPage } from './ConfigProfiles';

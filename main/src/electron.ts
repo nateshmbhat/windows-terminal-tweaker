@@ -7,8 +7,23 @@ import * as os from 'os';
 import { Channels } from './types';
 
 let mainWindow: BrowserWindow;
-let terminalConfigFilePath: string ='';
+let terminalConfigFilePath: string = '';
 let terminalConfigFileData: string = '';
+
+
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+    app.quit()
+} else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        // Someone tried to run a second instance, we should focus our window.
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore()
+            mainWindow.focus()
+        }
+    })
+}
 
 
 const readTerminalConfigFile = () => {
@@ -24,14 +39,14 @@ const readTerminalConfigFile = () => {
             console.log(file);
         });
 
-        readFile( terminalConfigFilePath , 
-        (err, data) => {
-            if (err) {
-                console.log("Error reading profiles.json : ", err);
-            }
-            terminalConfigFileData = data.toString() ;             
-            console.log("Profiles.json : \n",terminalConfigFileData) ; 
-        })
+        readFile(terminalConfigFilePath,
+            (err, data) => {
+                if (err) {
+                    console.log("Error reading profiles.json : ", err);
+                }
+                terminalConfigFileData = data.toString();
+                console.log("Profiles.json : \n", terminalConfigFileData);
+            })
     });
 
 }
@@ -39,7 +54,7 @@ const readTerminalConfigFile = () => {
 
 function createWindow() {
 
-    readTerminalConfigFile() ; 
+    readTerminalConfigFile();
 
     if (isDev) {
         BrowserWindow.addDevToolsExtension(
@@ -48,10 +63,15 @@ function createWindow() {
     }
 
     mainWindow = new BrowserWindow({
-        width: 900, height: 680, webPreferences: {
+        width: 900, height: 680, 
+        webPreferences: {
             nodeIntegration: true,
-            devTools : false
-        }
+            // devTools : false
+        } , 
+        hasShadow : true , 
+        // show : false , 
+        title : 'Terminal Tweaker' , 
+        show : false 
     });
     mainWindow.loadURL(
         isDev
@@ -59,15 +79,16 @@ function createWindow() {
             : `file://${path.join(__dirname, "../build/index.html")}`
     );
 
-    mainWindow.setMenuBarVisibility(false) ; 
+    mainWindow.setMenuBarVisibility(false);
 
     mainWindow.on("closed", () => (mainWindow.destroy()));
+    mainWindow.on('ready-to-show' , ()=>{mainWindow.show()}) ; 
 
     ipcMain.on(Channels.terminalConfigPath, (event: IpcMessageEvent, msg: any) => {
-        console.log('terminal config path : ' , msg);
+        console.log('terminal config path : ', msg);
         readFile(msg, (err, data) => {
             if (err) {
-                console.log('Error : ' , err);
+                console.log('Error : ', err);
                 sendConfigLoadFailure(mainWindow, err.message);
             }
             else {
@@ -78,10 +99,10 @@ function createWindow() {
         })
     })
 
-    ipcMain.on(Channels.getTerminalConfigData , (event: IpcMessageEvent) => {
-        console.log('Get terminal config data : ' );
+    ipcMain.on(Channels.getTerminalConfigData, (event: IpcMessageEvent) => {
+        console.log('Get terminal config data : ');
         sendConfigLoadSuccess(mainWindow, terminalConfigFileData);
-   })
+    })
 
     ipcMain.on(Channels.terminalConfigChange, (event: IpcMessageEvent, config: string) => {
         if (terminalConfigFilePath == undefined) {

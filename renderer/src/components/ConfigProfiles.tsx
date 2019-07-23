@@ -8,8 +8,6 @@ import { NavBar } from './NavBar';
 import { MessagePopup } from './MessagePopup';
 
 
-
-
 const InputFieldBarWithLabel = (props: {
     property: string,
     value: string | number | undefined,
