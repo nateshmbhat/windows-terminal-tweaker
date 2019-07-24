@@ -66,12 +66,11 @@ function createWindow() {
         width: 900, height: 680, 
         webPreferences: {
             nodeIntegration: true,
-            // devTools : false
+            devTools : false
         } , 
         hasShadow : true , 
-        // show : false , 
         title : 'Terminal Tweaker' , 
-        show : false 
+        show : false , 
     });
     mainWindow.loadURL(
         isDev

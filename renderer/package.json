@@ -1,16 +1,15 @@
 {
-  "name": "electron-react-ts-starter",
-  "description": "Tweake your windows terminal to heart's content with this app filled beautiful UI components to configure everything about the terminal.",
+  "name": "terminal-tweaker",
+  "description": "Tweak your windows terminal to heart's content with this app using its beautiful interface to configure everything about the terminal.",
   "author": "nateshmbhat",
-  "displayName": "Terminal Tweaker",
   "repository": {"type": "git" , "url": "https://github.com/nateshmbhat/windows-terminal-tweaker"},
   "version": "0.1.0",
   "keywords": ["terminal-tweaker" , "terminal tweaker" , "tweaker" , "terminal" , "windows terminal tweaker"],
-  "license": "GPL3",
+  "license": "GPL-3",
   "private": true,
   "homepage": "./",
   "build": {
-    "appId": "com.natesh.windows-terminal-tweaker",
+    "appId": "com.natesh.terminal-tweaker",
     "productName": "Terminal Tweaker",
     "copyright": "Copyright © 2019 Natesh M Bhat",
     "files": [
@@ -45,6 +44,7 @@
     "react-build": "react-scripts build",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
+    "clean" : "rm dist build -rf" , 
     "electron-build": "electron-builder",
     "react-prebuild": "cross-env cp ../main/src/*.js ./public/",
     "release": "tsc ../main/src/electron.ts && npm run react-prebuild && npm run react-build && electron-builder --publish=always",
