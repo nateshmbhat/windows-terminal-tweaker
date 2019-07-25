@@ -5,6 +5,8 @@ import { ColorPickerPopup } from './ColorChangePickerPopUp';
 import { NavBar } from './NavBar';
 import { NavLinkPaths, MessageTypes } from '../types/types';
 import { MessagePopup } from './MessagePopup';
+import { defaultSchemesArray } from '../store/initialStateObjects';
+import { useMessage } from '../hooks/useMessage';
 
 const SchemeColorBar = (props: { property: string, value: string, updateCurrentScheme: (obj: any) => void }) => {
     return (
@@ -33,7 +35,7 @@ const ConfigSchemesPage = () => {
     const [schemes, profiles, configFlags] = useStoreState((state) => [state.schemes, state.profiles, state.terminalConfig])
     const [setSpecificScheme, setSchemes] = useStoreActions(actions => [actions.setSpecificScheme, actions.setSchemes])
     const [curScheme, setCurrentScheme] = React.useState(schemes[0]);
-    const [popupMessage, setPopupMessage] = React.useState({ hidden: true, message: '', header: 'Warning', type: MessageTypes.warning })
+    const {popupMessage, closePopUp , showInfoMessage , showWarningMessage} = useMessage() ; 
     let curSchemeCopy = { ...curScheme }; //copy wouldnt contain the name property and is used to map data into UI components
     delete curSchemeCopy.name;
 
@@ -41,11 +43,7 @@ const ConfigSchemesPage = () => {
         let newScheme = { ...schemes[0] };
         newScheme.name = `New Scheme ${(Math.floor(Math.random() * 1000))}`
         setSchemes([...schemes, newScheme]);
-
-        setPopupMessage({ ...popupMessage, hidden: false, header: 'Success', message: `New Scheme added.`, type: MessageTypes.info });
-        setTimeout(() => {
-            setPopupMessage({ ...popupMessage, hidden: true });
-        }, 2000)
+        showInfoMessage('New Scheme added.')        
     }
 
     const updateCurrentScheme = (obj: any) => {
@@ -53,23 +51,23 @@ const ConfigSchemesPage = () => {
         setSpecificScheme({ ...curScheme, ...obj })
     }
 
+    const resetSchemeToDefaults = ()=>{
+        let defaultCopy = defaultSchemesArray.filter(s=>s.name===curScheme.name) ;
+    }
+
     const deleteCurrentScheme = () => {
         if (schemes.length === 1) {
-            setPopupMessage({ ...popupMessage, hidden: false, message: `Cannot delete the Scheme '${curScheme.name}' since it is the only active scheme.` });
+            showWarningMessage(`Cannot delete the Scheme '${curScheme.name}' since it is the only active scheme.`) ; 
             return;
         }
         let profilesUsingScheme = profiles.filter(p => p.colorScheme === curScheme.name);
         if (profilesUsingScheme.length > 0) {
             // Show error message that the current scheme name can't be changed since its alredy used in a profile
-            setPopupMessage({ ...popupMessage, hidden: false, message: `Cannot delete the Scheme '${curScheme.name}' since it is already being used by a Profile.` });
+            showWarningMessage(`Cannot delete the Scheme '${curScheme.name}' since it is already being used by a Profile.` );
             return;
         }
 
-        setPopupMessage({ ...popupMessage, hidden: false, header: 'Info', type: MessageTypes.info, message: `'Scheme ${curScheme.name}' Deleted.` });
-
-        setTimeout(() => {
-            setPopupMessage({ ...popupMessage, hidden: true });
-        }, 2000)
+        showInfoMessage(`Scheme '${curScheme.name}' Deleted.`) ;
 
         let newSchemes = schemes.filter(s => s.name != curScheme.name);
         setSchemes(newSchemes);
@@ -80,7 +78,7 @@ const ConfigSchemesPage = () => {
         <>
             <NavBar navPath={NavLinkPaths.schemes} />
 
-            <MessagePopup onDismiss={e => setPopupMessage({ ...popupMessage, hidden: true })} content={popupMessage.message} warning={popupMessage.type === MessageTypes.warning} header={popupMessage.header} hidden={popupMessage.hidden} />
+            <MessagePopup onDismiss={e => closePopUp()} content={popupMessage.message} warning={popupMessage.type === MessageTypes.warning} header={popupMessage.header} hidden={popupMessage.hidden} />
             <Container>
                 <br />
                 <Grid.Row centered textAlign='center' verticalAlign='middle' stretched>
@@ -118,6 +116,16 @@ const ConfigSchemesPage = () => {
                                                     Confirm Deletion
                                         </Popup>
                                             </Popup>
+
+                                            <Popup closeOnPortalMouseLeave trigger={
+                                                <Button icon={<Icon name='redo' color='brown' />} />
+                                            }>
+                                                <Popup trigger={<Button size='small' onClick={e => 
+                                                    resetSchemeToDefaults()                                                
+                                                } content={'Reset Profile'} />}>
+                                                    Confirm Reset
+                                        </Popup>
+                                            </Popup>
                                         </div>
 
 
@@ -134,12 +142,10 @@ const ConfigSchemesPage = () => {
                                         let profilesUsingScheme = profiles.filter(p => p.colorScheme === curScheme.name);
                                         if (profilesUsingScheme.length > 0) {
                                             // Show error message that the current scheme name can't be changed since its alredy used in a profile
-                                            setPopupMessage({ ...popupMessage, hidden: false, message: 'Cannot change this Scheme name since it is already being used by a Profile.' });
+                                            showWarningMessage('Cannot change this Scheme name since it is already being used by a Profile.');
                                             return;
                                         }
-
                                         updateCurrentScheme({ name: e.target.value });
-
                                     }}
                                 />
                             </Segment>

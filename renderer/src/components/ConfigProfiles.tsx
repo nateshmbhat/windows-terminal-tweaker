@@ -6,6 +6,8 @@ import { ColorPickerPopup } from './ColorChangePickerPopUp';
 import { v4 as uuid4 } from 'uuid';
 import { NavBar } from './NavBar';
 import { MessagePopup } from './MessagePopup';
+import { defaultProfile } from '../store/initialStateObjects';
+import { useMessage } from '../hooks/useMessage';
 
 
 const InputFieldBarWithLabel = (props: {
@@ -44,7 +46,7 @@ const ConfigProfilesPage = () => {
     const [profiles, schemes, globals, terminalConfigFlags] = useStoreState((state) => [state.profiles, state.schemes, state.globals, state.terminalConfig])
     const [setStoreProfile, setStoreProfiles, setStoreGlobals] = useStoreActions((actions) => [actions.setSpecificProfile, actions.setProfiles, actions.setGlobals]);
     const [curProfile, setCurrentProfile] = React.useState(profiles[0]);
-    const [popupMessage, setPopupMessage] = React.useState({ hidden: true, message: '', header: 'Warning', type: MessageTypes.warning })
+    const {popupMessage, closePopUp , showInfoMessage , showWarningMessage} = useMessage() ; 
 
 
     const profileIconError: boolean = typeof curProfile.icon === 'string' && (!!curProfile.icon.match(WindowsFilePathRegex) || curProfile.icon.indexOf('ms-appx') < 0)
@@ -60,15 +62,22 @@ const ConfigProfilesPage = () => {
         newprofile.name = 'New Profile';
         newprofile.guid = `{${uuid4()}}`;
         setStoreProfiles([...profiles, newprofile]);
-        setPopupMessage({ ...popupMessage, hidden: false, message: 'New Profile Added', type: MessageTypes.info, header: 'Added' })
-        setTimeout(() => setPopupMessage({ ...popupMessage, hidden: true }), 2000);
+        showInfoMessage('New Profile Added' , 'Added')
+    }
+
+    const resetProfileToDefaults =()=>{
+        let defaultProfileCopy = {...defaultProfile} ; 
+        defaultProfileCopy.guid = curProfile.guid ;  //the guid of the default profile to the current profile
+        setCurrentProfile(defaultProfileCopy) ; 
+        setStoreProfile({profile : defaultProfileCopy , id : curProfile.guid })
+        showInfoMessage('Profile has been reset') ; 
     }
 
     const deleteCurrentProfile = () => {
         // Delete current profile and set the next profile as the selected one
 
         if (profiles.length === 1) {
-            setPopupMessage({ ...popupMessage, hidden: false, message: 'Cannot delete this profile since this is the only active one.' })
+            showWarningMessage('Cannot delete this profile since this is the only active one.' )
             return;
         }
 
@@ -80,15 +89,14 @@ const ConfigProfilesPage = () => {
         setStoreProfiles(newProfiles);
         setCurrentProfile(newProfiles[0]);
 
-        setPopupMessage({ ...popupMessage, hidden: false, message: `Profile : ${curProfile.name} is deleted.`, type: MessageTypes.info, header: 'Deleted' })
-        setTimeout(() => setPopupMessage({ ...popupMessage, hidden: true }), 2000);
+        showInfoMessage(`Profile : ${curProfile.name} is deleted.` , 'Deleted') ; 
     }
 
     return (
         <>
             <NavBar navPath={NavLinkPaths.profiles} />
 
-            <MessagePopup onDismiss={e => setPopupMessage({ ...popupMessage, hidden: true })} content={popupMessage.message} warning={popupMessage.type === MessageTypes.warning} header={popupMessage.header} hidden={popupMessage.hidden} />
+            <MessagePopup onDismiss={e => closePopUp() } content={popupMessage.message} warning={popupMessage.type === MessageTypes.warning} header={popupMessage.header} hidden={popupMessage.hidden} />
 
             <Container>
                 <br />
@@ -102,6 +110,7 @@ const ConfigProfilesPage = () => {
                     terminalConfigFlags.loadSuccess &&
                     <>
                         <Segment raised size='large' attached color='violet'>
+
                             <Dropdown text={'Profile : ' + curProfile.name} fluid >
                                 <DropdownMenu>
                                     {
@@ -114,7 +123,7 @@ const ConfigProfilesPage = () => {
                                     <DropdownDivider />
 
                                     <DropdownItem onClick={e => e.preventDefault()} >
-                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                        <div style={{ display: 'flex'}}>
                                             <Button content='Add New Profile' fluid onClick={e => addNewProfile()} />
 
                                             <Popup closeOnPortalMouseLeave trigger={
@@ -125,10 +134,22 @@ const ConfigProfilesPage = () => {
                                         </Popup>
                                             </Popup>
 
+                                            <Popup closeOnPortalMouseLeave trigger={
+                                                <Button icon={<Icon name='redo' color='brown' />} />
+                                            }>
+                                                <Popup trigger={<Button size='small' onClick={e => 
+                                                    resetProfileToDefaults()                                                
+                                                } content={'Reset Profile'} />}>
+                                                    Confirm Reset
+                                        </Popup>
+                                            </Popup>
+ 
                                         </div>
                                     </DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
+
+
                         </Segment>
 
                         <SegmentGroup>
@@ -149,7 +170,7 @@ const ConfigProfilesPage = () => {
 
                             <Segment>
                                 {/* LET THIS FIELD BE READ ONLY */}
-                                <Input fluid label='Profile ID' icon={<Icon name='circle outline' />} value={curProfile.guid} />
+                                <Label size='large'  content={`Profile ID : ${curProfile.guid}`} icon={<Icon name='circle outline' />} />
                             </Segment>
 
 
