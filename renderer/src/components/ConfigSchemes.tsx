@@ -52,7 +52,16 @@ const ConfigSchemesPage = () => {
     }
 
     const resetSchemeToDefaults = ()=>{
-        let defaultCopy = defaultSchemesArray.filter(s=>s.name===curScheme.name) ;
+        let defaultSchemesWithCurName = defaultSchemesArray.filter(s=>s.name===curScheme.name) ;
+        if(defaultSchemesWithCurName.length==0){
+            showWarningMessage(`Make sure that the scheme 'name' is set to one of the following to be able to reset it to defaults.
+
+            [ Campbell , One Half Dark , One Half Light , Solarized Dark , Solarized Light ]
+            `)
+            return ;  
+        }
+        setCurrentScheme(defaultSchemesWithCurName[0]); 
+        setSpecificScheme(defaultSchemesWithCurName[0]); 
     }
 
     const deleteCurrentScheme = () => {
@@ -140,12 +149,18 @@ const ConfigSchemesPage = () => {
                                 <Input fluid label='Scheme Name' icon={<Icon name='circle outline' />} value={curScheme.name}
                                     onChange={e => {
                                         let profilesUsingScheme = profiles.filter(p => p.colorScheme === curScheme.name);
+                                        let val = e.target.value ;  
                                         if (profilesUsingScheme.length > 0) {
                                             // Show error message that the current scheme name can't be changed since its alredy used in a profile
                                             showWarningMessage('Cannot change this Scheme name since it is already being used by a Profile.');
                                             return;
                                         }
-                                        updateCurrentScheme({ name: e.target.value });
+                                        if(schemes.filter(s=>s.name===val).length>0){
+                                            // if any other scheme already has the given name , then reject it ! 
+                                            showWarningMessage(`Scheme name '${val}' is already used by another scheme.`);
+                                            return;
+                                        }
+                                        updateCurrentScheme({ name: val });
                                     }}
                                 />
                             </Segment>

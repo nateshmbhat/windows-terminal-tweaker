@@ -19,7 +19,7 @@ export const useMessage = () => {
         setPopupMessage({ ...popupMessage, hidden: false, header: header , message: msg, type: MessageTypes.warning});
         setTimeout(() => {
             setPopupMessage({ ...popupMessage, hidden: true });
-        }, 5000)
+        }, 10000)
     }
 
     return {popupMessage , showInfoMessage , showWarningMessage , closePopUp} ; 

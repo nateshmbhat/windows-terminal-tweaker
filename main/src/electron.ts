@@ -108,10 +108,13 @@ function createWindow() {
             console.log("Error ! Terminal config path undefined ! ");
             return;
         }
+
         writeFile(terminalConfigFilePath, config, null, (err) => {
             if (err)
                 console.log("Error writing to File : ", err);
         });
+
+        terminalConfigFileData = config ; 
     })
 }
 
