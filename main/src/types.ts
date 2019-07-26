@@ -5,3 +5,11 @@ export enum Channels{
     terminalConfigPath = 'terminal-config-path' ,
     getTerminalConfigData = 'get-terminal-config-data' , 
 }
+
+export enum ElectronStoreTypes {
+    configFilePath  = 'configFilePath' ,
+    windowHeight = 'windowHeight'  ,
+    windowWidth = 'windowWidth'  , 
+    windowX = 'windowX' , 
+    windowY = 'windowY' , 
+}

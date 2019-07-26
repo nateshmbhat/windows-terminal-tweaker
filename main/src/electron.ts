@@ -4,7 +4,8 @@ import * as path from 'path'
 import { readFile, writeFile, readdir } from 'fs';
 import { sendConfigLoadFailure, sendConfigLoadSuccess } from './messenger';
 import * as os from 'os';
-import { Channels } from './types';
+import { Channels, ElectronStoreTypes } from './types';
+
 const Store= require('electron-store') ; 
 
 let mainWindow: BrowserWindow;
@@ -30,12 +31,14 @@ if (!gotTheLock) {
 
 const readTerminalConfigFile = () => {
     readdir(`${os.homedir()}/AppData/Local/Packages`, (err, files) => {
+
         if (err) console.log("Error : ", err);
 
         files.forEach(file => {
             if (file.match('Microsoft.WindowsTerminal_.*')) {
                 console.log("MATCH FOUND = ", file);
                 terminalConfigFilePath = `${os.homedir()}/AppData/Local/Packages/${file}/RoamingState/profiles.json`
+                store.set(ElectronStoreTypes.configFilePath , terminalConfigFilePath)
                 return;
             }
             console.log(file);
@@ -56,44 +59,53 @@ const readTerminalConfigFile = () => {
     });
 }
 
+    function createWindow() {
+            
+            readTerminalConfigFile();
+            
+            if (isDev) {
+                BrowserWindow.addDevToolsExtension(
+                    path.join('C:\\Users\\Natesh\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.17.0_0')
+                    )
+                }
+                
+                mainWindow = new BrowserWindow({
+                    width : store.get(ElectronStoreTypes.windowWidth) , 
+                    height : store.get(ElectronStoreTypes.windowHeight) , 
+                    x : store.get(ElectronStoreTypes.windowX)  ,
+                    y : store.get(ElectronStoreTypes.windowY) , 
+                    webPreferences: {
+                        nodeIntegration: true,
+                        devTools : true
+                    } , 
+                    hasShadow : true , 
+                    title : 'Terminal Tweaker' , 
+                    show : false , 
+                });
+                mainWindow.loadURL(
+                    isDev
+                    ? "http://localhost:3000"
+                    : `file://${path.join(__dirname, "../build/index.html")}`
+                    );
+                    
+                    
+                    mainWindow.setMenuBarVisibility(false);
+                    
+                    mainWindow.on("closed", () => (mainWindow.destroy()));
+                    mainWindow.on('ready-to-show' , ()=>{mainWindow.show()}) ; 
+                    mainWindow.on('close' , ()=>{
+                        store.set(ElectronStoreTypes.windowX,  mainWindow.getPosition()[0])  
+                        store.set(ElectronStoreTypes.windowY,  mainWindow.getPosition()[1])  
+                        store.set(ElectronStoreTypes.windowHeight,  mainWindow.getSize()[1])  
+                        store.set(ElectronStoreTypes.windowWidth ,  mainWindow.getSize()[0])  
+                    })
 
-function createWindow() {
-
-    readTerminalConfigFile();
-
-    if (isDev) {
-        BrowserWindow.addDevToolsExtension(
-            path.join('C:\\Users\\Natesh\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.17.0_0')
-        )
-    }
-
-    mainWindow = new BrowserWindow({
-        width: 900, height: 680, 
-        webPreferences: {
-            nodeIntegration: true,
-            devTools : true
-        } , 
-        hasShadow : true , 
-        title : 'Terminal Tweaker' , 
-        show : false , 
-    });
-    mainWindow.loadURL(
-        isDev
-            ? "http://localhost:3000"
-            : `file://${path.join(__dirname, "../build/index.html")}`
-    );
-
-    mainWindow.setMenuBarVisibility(false);
-
-    mainWindow.on("closed", () => (mainWindow.destroy()));
-    mainWindow.on('ready-to-show' , ()=>{mainWindow.show()}) ; 
-
-    ipcMain.on(Channels.terminalConfigPath, (event: IpcMessageEvent, msg: any) => {
-        console.log('terminal config path : ', msg);
-        readFile(msg, (err, data) => {
-            if (err) {
-                console.log('Error : ', err);
-                sendConfigLoadFailure(mainWindow, err.message);
+                    ipcMain.on(Channels.terminalConfigPath, (event: IpcMessageEvent, msg: any) => {
+                        console.log('terminal config path : ', msg);
+                        readFile(msg, (err, data) => {
+                            if (err) {
+                                console.log('Error : ', err);
+                                sendConfigLoadFailure(mainWindow, err.message);
             }
             else {
                 terminalConfigFilePath = msg;
