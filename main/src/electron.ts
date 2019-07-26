@@ -5,11 +5,13 @@ import { readFile, writeFile, readdir } from 'fs';
 import { sendConfigLoadFailure, sendConfigLoadSuccess } from './messenger';
 import * as os from 'os';
 import { Channels } from './types';
+const Store= require('electron-store') ; 
 
 let mainWindow: BrowserWindow;
-let terminalConfigFilePath: string = '';
-let terminalConfigFileData: string = '';
+let terminalConfigFilePath: string|undefined = undefined
+let terminalConfigFileData: string|undefined = undefined
 
+const store  = new Store() ; 
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -38,17 +40,20 @@ const readTerminalConfigFile = () => {
             }
             console.log(file);
         });
+        
+        if(terminalConfigFilePath !=undefined)
+        {
+            readFile(terminalConfigFilePath,
+                (err, data) => {
+                    if (err) {
+                        console.log("Error reading profiles.json : ", err);
+                    }
+                    terminalConfigFileData = data.toString();
+                    console.log("Profiles.json : \n", terminalConfigFileData);
+                })
+        }
 
-        readFile(terminalConfigFilePath,
-            (err, data) => {
-                if (err) {
-                    console.log("Error reading profiles.json : ", err);
-                }
-                terminalConfigFileData = data.toString();
-                console.log("Profiles.json : \n", terminalConfigFileData);
-            })
     });
-
 }
 
 
@@ -66,7 +71,7 @@ function createWindow() {
         width: 900, height: 680, 
         webPreferences: {
             nodeIntegration: true,
-            devTools : false
+            devTools : true
         } , 
         hasShadow : true , 
         title : 'Terminal Tweaker' , 
@@ -109,12 +114,12 @@ function createWindow() {
             return;
         }
 
-        writeFile(terminalConfigFilePath, config, null, (err) => {
-            if (err)
-                console.log("Error writing to File : ", err);
-        });
-
-        terminalConfigFileData = config ; 
+        if(terminalConfigFilePath!=undefined){
+            writeFile(terminalConfigFilePath, config, null, (err) => {
+                if (err) console.log("Error writing to File : ", err);
+                else terminalConfigFileData = config ; 
+            });
+        }
     })
 }
 

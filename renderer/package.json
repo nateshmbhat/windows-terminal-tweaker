@@ -3,7 +3,13 @@
   "description": "Tweak your windows terminal to heart's content with this app using its beautiful interface to configure everything about the terminal.",
   "author": "nateshmbhat",
   "version": "0.1.1",
-  "keywords": ["terminal-tweaker" , "terminal tweaker" , "tweaker" , "terminal" , "windows terminal tweaker"],
+  "keywords": [
+    "terminal-tweaker",
+    "terminal tweaker",
+    "tweaker",
+    "terminal",
+    "windows terminal tweaker"
+  ],
   "license": "GPL-3",
   "private": true,
   "homepage": "./",
@@ -26,6 +32,7 @@
   "dependencies": {
     "easy-peasy": "^2.6.5",
     "electron-is-dev": "^1.1.0",
+    "electron-store": "^4.0.0",
     "mousetrap": "^1.6.3",
     "react": "^16.8.6",
     "react-color": "^2.17.3",
@@ -41,7 +48,7 @@
     "react-build": "react-scripts build",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
-    "clean" : "rm dist build -rf" , 
+    "clean": "rm dist build -rf",
     "electron-build": "electron-builder",
     "react-prebuild": "cross-env cp ../main/src/*.js ./public/",
     "release": "tsc ../main/src/electron.ts && npm run react-prebuild && npm run react-build && electron-builder --publish=always",

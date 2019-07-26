@@ -15,3 +15,8 @@ code {
 .BigButton{
   padding: 50px !important ;
 }
+
+
+div *{
+  user-select: none ; 
+}

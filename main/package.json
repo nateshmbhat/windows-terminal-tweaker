@@ -8,9 +8,11 @@
   "author": "nateshmbhat",
   "dependencies": {
     "@types/electron": "^1.6.10",
-    "electron": "^5.0.6"
+    "electron": "^5.0.6",
+    "electron-store": "^4.0.0"
   },
   "devDependencies": {
+    "@types/electron-store": "^3.2.0",
     "concurrently": "^4.1.1",
     "electron-is-dev": "^1.1.0",
     "nodemon": "^1.19.1",

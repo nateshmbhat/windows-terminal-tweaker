@@ -1,7 +1,8 @@
-import * as React from 'react'; import { Container, Button, Grid, Segment, Divider, Input, Dropdown, SegmentGroup, Label, Icon } from 'semantic-ui-react';
+import * as React from 'react'; import { Container, Button, Grid, Segment, Divider, Input, Dropdown, SegmentGroup, Label, Icon, Popup } from 'semantic-ui-react';
 import { useStoreState, useStoreActions } from '../store/store';
 import { RequestedThemeOptions, TerminalKeyBinding, NavLinkPaths } from '../types/types';
 import { NavBar } from './NavBar';
+import { defaultGlobals } from '../store/initialStateObjects';
 
 
 const isPrintableKeyCode = (keycode: number): boolean => {
@@ -102,6 +103,12 @@ const ConfigGlobalsPage = () => {
     const [globals, profiles, configFlags] = useStoreState((state) => [state.globals, state.profiles, state.terminalConfig])
     const [setGlobals, setKeybinding] = useStoreActions((actions) => [actions.setGlobals, actions.setSpecificKeyBinding]);
     console.log(globals)
+
+
+    const resetKeybindings = () => {
+        setGlobals({ ...globals, keybindings: defaultGlobals.keybindings });
+    }
+
     return (
         <>
             <NavBar navPath={NavLinkPaths.globals} />
@@ -208,21 +215,29 @@ const ConfigGlobalsPage = () => {
                         <SegmentGroup>
                             <Segment>
                                 <Label ribbon size='huge' content={'Keyboard Shortcuts'} />
+                                <Popup position='top center' closeOnPortalMouseLeave trigger={
+                                    <Button floated='right' circular icon={<Icon name='redo' color='brown' />} />
+                                }>
+                                    <Popup trigger={<Button size='small' onClick={e => resetKeybindings() } 
+                                    content={'Reset to Defaults'} />}>
+                                        Confirm
+                                        </Popup>
+                                </Popup>
                             </Segment>
 
-                            {
-                                globals.keybindings.map(k =>
-                                    (
-                                        <KeyBindingBar key={k.command} keybinding={k} setKeybinding={setKeybinding} />
-                                    )
+                        {
+                            globals.keybindings.map(k =>
+                                (
+                                    <KeyBindingBar key={k.command} keybinding={k} setKeybinding={setKeybinding} />
                                 )
-                            }
+                            )
+                        }
 
-                        </SegmentGroup>
+                    </SegmentGroup>
 
 
                     </>
-                }
+            }
 
                 <Divider />
 
