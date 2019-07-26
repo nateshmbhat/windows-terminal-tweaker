@@ -55,7 +55,7 @@
     "build": "tsc ../main/src/electron.ts && npm run react-prebuild && npm run react-build && electron-builder",
     "start": "cross-env BROWSER=none npm run react-start"
   },
-  "eslintConfig": {
+"eslintConfig": {
     "extends": "react-app"
   },
   "browserslist": {
