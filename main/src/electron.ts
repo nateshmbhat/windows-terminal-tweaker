@@ -9,11 +9,12 @@ import { registerWindowCallbacks } from './registerWindowCallbacks';
 
 const Store = require('electron-store');
 
-let mainWindow: BrowserWindow;
-let terminalConfigFilePath: string | undefined = undefined
-let terminalConfigFileData: string | undefined = undefined
 
 const store = new Store();
+
+let mainWindow: BrowserWindow;
+let terminalConfigFilePath: string | undefined = store.get(ElectronStoreTypes.configFilePath) ; 
+let terminalConfigFileData: string | undefined = undefined
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -30,35 +31,43 @@ if (!gotTheLock) {
 }
 
 
-const readTerminalConfigFile = () => {
+const findConfigFilePathForFirstTime = ()=>{
     readdir(`${os.homedir()}/AppData/Local/Packages`, (err, files) => {
-
+    
         if (err) {
             console.log("Error : ", err);
             return;
         }
-
+    
         files.forEach(file => {
             if (file.match('Microsoft.WindowsTerminal_.*')) {
                 console.log("MATCH FOUND = ", file);
                 terminalConfigFilePath = `${os.homedir()}/AppData/Local/Packages/${file}/RoamingState/profiles.json`
                 store.set(ElectronStoreTypes.configFilePath, terminalConfigFilePath)
-                return;
             }
             console.log(file);
         });
+       });
+}
 
-        if (terminalConfigFilePath != undefined) {
-            readFile(terminalConfigFilePath,
-                (err, data) => {
-                    if (err) {
-                        console.log("Error reading profiles.json : ", err);
-                    }
+
+const readTerminalConfigFile = () => {
+    if(terminalConfigFilePath===undefined){
+        findConfigFilePathForFirstTime() ; 
+    }
+
+    if (terminalConfigFilePath != undefined) {
+        readFile(terminalConfigFilePath,
+            (err, data) => {
+                if (err) {
+                    console.log("Error reading profiles.json : ", err);
+                }
+                else{
                     terminalConfigFileData = data.toString();
                     console.log("Profiles.json : \n", terminalConfigFileData);
-                })
-        }
-    });
+                }
+        })
+    }
 }
 
 
@@ -112,7 +121,9 @@ function createWindow() {
 
     ipcMain.on(Channels.getTerminalConfigData, (event: IpcMessageEvent) => {
         console.log('Get terminal config data : ');
-        sendConfigLoadSuccess(mainWindow, terminalConfigFileData);
+        if(terminalConfigFileData!=undefined)
+            sendConfigLoadSuccess(mainWindow, terminalConfigFileData);
+        else sendConfigLoadFailure(mainWindow , 'Failed to get Terminal Configuration') ; 
     })
 
     ipcMain.on(Channels.terminalConfigChange, (event: IpcMessageEvent, config: string) => {
