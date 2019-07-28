@@ -11,7 +11,7 @@ The app gives control over creation , deletion and updation for all of your prof
 
 ### Links : 
 
-+ [The application and my take on the technologies I used for this project](https://bit.ly/2MhyTAp)
++ [About the app and my take on the technologies I used for this project](https://bit.ly/2MhyTAp)
 + I built this on top of my [electron-react-typescript](https://github.com/nateshmbhat/electron-react-ts-starter) starter pack which comes with sweet typescript autoreloading and most bug fixes with CRA support.
 + Links To Download the app : 
     + [Terminal Tweaker portable](https://github.com/nateshmbhat/windows-terminal-tweaker/releases/download/0.1.1/Terminal.Tweaker.Portable.zip)
