@@ -3,6 +3,7 @@
   "description": "Tweak your windows terminal to heart's content with this app using its beautiful interface to configure everything about the terminal.",
   "author": "nateshmbhat",
   "version": "0.1.1",
+  "icon": "assets/app.ico",
   "keywords": [
     "terminal-tweaker",
     "terminal tweaker",

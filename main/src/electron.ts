@@ -9,7 +9,6 @@ import { registerWindowCallbacks } from './registerWindowCallbacks';
 
 const Store = require('electron-store');
 
-
 const store = new Store();
 
 let mainWindow: BrowserWindow;
