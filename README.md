@@ -19,3 +19,9 @@ The app gives control over creation , deletion and updation for all of your prof
 + [About the app and my take on the technologies I used for this project](https://bit.ly/2MhyTAp)
 + I built this on top of my [electron-react-typescript](https://github.com/nateshmbhat/electron-react-ts-starter) starter pack which comes with sweet typescript autoreloading and most bug fixes with CRA support.
 + [New windows terminal](https://www.microsoft.com/store/productId/9N0DX20HK701) if you don't have it already.
+
+### Screenshots :
+
+![](https://user-images.githubusercontent.com/23279926/62006828-aa62ef80-b163-11e9-82e3-afcead79e368.PNG)
+![](https://user-images.githubusercontent.com/23279926/62006825-a9ca5900-b163-11e9-8e9a-0647d1ed2870.PNG)
+![](https://user-images.githubusercontent.com/23279926/62006827-a9ca5900-b163-11e9-9647-0920a673935b.PNG)
