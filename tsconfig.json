@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "jsx": "react",
+
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+
+    "sourceMap": true,
+    "lib": ["es2015", "es2017", "es2016", "dom"],
+    "outDir": "dist"
+  },
+  "files": ["app/renderer/index.tsx"],
+  "include": [
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "typings/index.d.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}
