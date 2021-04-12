@@ -43,7 +43,7 @@
     "prestart": "yarn build",
     "start": "cross-env NODE_ENV=production electron ./app/",
     "start-server-dev": "cross-env NODE_ENV=development node --experimental-worker --trace-warnings ./node_modules/webpack-dev-server/bin/webpack-dev-server --config webpack.config.renderer.dev.js",
-    "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./app/main.js"
+    "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./app/main.bundle.js"
   },
   "eslintConfig": {
     "extends": "react-app"

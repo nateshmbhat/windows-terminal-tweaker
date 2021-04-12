@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const fs = require('fs');
 
 function CheckBuildsExist() {
-  const mainPath = path.join(__dirname, '..', '..', 'app', 'main.prod.js');
+  const mainPath = path.join(__dirname, '..', '..', 'app', 'main.bundle.js');
   const rendererPath = path.join(
     __dirname,
     '..',

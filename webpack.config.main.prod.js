@@ -23,7 +23,7 @@ module.exports = merge.smart(baseConfig, {
 
   output: {
     path: __dirname,
-    filename: './app/main.js'
+    filename: './app/main.bundle.js'
   },
 
   optimization: {

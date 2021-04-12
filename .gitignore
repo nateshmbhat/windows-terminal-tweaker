@@ -1,6 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 main/src/*.js
+*.bundle.js
+*.bundle.js.map
 .vscode/
 
 renderer/build
