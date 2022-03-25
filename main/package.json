@@ -8,7 +8,7 @@
   "author": "nateshmbhat",
   "dependencies": {
     "@types/electron": "^1.6.10",
-    "electron": "^7.2.4",
+    "electron": "^13.6.6",
     "electron-store": "^4.0.0"
   },
   "devDependencies": {
